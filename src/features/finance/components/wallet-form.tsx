@@ -1,0 +1,174 @@
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useCreateWallet, useUpdateWallet } from '@/features/finance/hooks/use-wallets'
+import type { Wallet } from '@/types/database'
+
+const walletSchema = z.object({
+  name: z.string().min(1, 'Wallet name is required').max(50, 'Name is too long'),
+  type: z.enum(['cash', 'bank', 'ewallet'], {
+    required_error: 'Select wallet type',
+  }),
+  initial_balance: z.coerce.number().min(0, 'Initial balance cannot be negative'),
+})
+
+type WalletFormData = z.infer<typeof walletSchema>
+
+interface WalletFormProps {
+  open: boolean
+  onClose: () => void
+  wallet?: Wallet | null
+}
+
+export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
+  const createWalletMutation = useCreateWallet()
+  const updateWalletMutation = useUpdateWallet()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<WalletFormData>({
+    resolver: zodResolver(walletSchema),
+    defaultValues: {
+      name: '',
+      type: 'cash',
+      initial_balance: 0,
+    },
+  })
+
+  const selectedType = watch('type')
+
+  useEffect(() => {
+    if (wallet) {
+      reset({
+        name: wallet.name,
+        type: wallet.type,
+        initial_balance: wallet.initial_balance,
+      })
+    } else {
+      reset({
+        name: '',
+        type: 'cash',
+        initial_balance: 0,
+      })
+    }
+  }, [wallet, reset, open])
+
+  const onSubmit = async (values: WalletFormData) => {
+    try {
+      if (wallet) {
+        await updateWalletMutation.mutateAsync({
+          id: wallet.id,
+          data: {
+            name: values.name,
+            type: values.type,
+            initial_balance: values.initial_balance,
+          },
+        })
+      } else {
+        await createWalletMutation.mutateAsync({
+          name: values.name,
+          type: values.type,
+          initial_balance: values.initial_balance,
+          is_archived: false,
+        })
+      }
+      onClose()
+    } catch (err) {
+      console.error('Failed to save wallet:', err)
+    }
+  }
+
+  const types = [
+    { id: 'cash', label: 'Cash', icon: '💵' },
+    { id: 'bank', label: 'Bank', icon: '🏦' },
+    { id: 'ewallet', label: 'E-Wallet', icon: '📱' },
+  ] as const
+
+  return (
+    <Dialog open={open} onClose={onClose}>
+      <DialogHeader>
+        <DialogTitle>{wallet ? 'Edit Wallet' : 'Add New Wallet'}</DialogTitle>
+      </DialogHeader>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Name */}
+        <div className="space-y-1.5">
+          <Label htmlFor="wallet-name">Wallet Name</Label>
+          <Input
+            id="wallet-name"
+            placeholder="e.g., Main Wallet, BCA, GoPay"
+            {...register('name')}
+          />
+          {errors.name && (
+            <p className="text-xs text-red-400">{errors.name.message}</p>
+          )}
+        </div>
+
+        {/* Type Selection */}
+        <div className="space-y-1.5">
+          <Label>Wallet Type</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {types.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setValue('type', t.id)}
+                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-xs font-medium transition-all ${
+                  selectedType === t.id
+                    ? 'border-emerald-400 bg-emerald-500/20 text-emerald-300'
+                    : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                }`}
+              >
+                <span className="text-lg mb-1">{t.icon}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
+          {errors.type && (
+            <p className="text-xs text-red-400">{errors.type.message}</p>
+          )}
+        </div>
+
+        {/* Initial Balance */}
+        <div className="space-y-1.5">
+          <Label htmlFor="initial-balance">
+            {wallet ? 'Initial Balance' : 'Initial Balance'}
+          </Label>
+          <Input
+            id="initial-balance"
+            type="number"
+            placeholder="0"
+            {...register('initial_balance')}
+          />
+          {errors.initial_balance && (
+            <p className="text-xs text-red-400">{errors.initial_balance.message}</p>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            disabled={isSubmitting || createWalletMutation.isPending || updateWalletMutation.isPending}
+            className="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-semibold"
+          >
+            {wallet ? 'Save Changes' : 'Add Wallet'}
+          </Button>
+        </div>
+      </form>
+    </Dialog>
+  )
+}
