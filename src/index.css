@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1E2024;
+    background-color: #FAF7F2;
+  }
+
+  .dark {
+    color: #F3F4F6;
+    background-color: #090909;
+  }
+
+  * {
+    @apply border-stone-200/60 dark:border-white/[0.08];
+  }
+
+  body {
+    @apply min-h-screen bg-[#FAF7F2] text-stone-900 dark:bg-[#090909] dark:text-stone-100 antialiased selection:bg-stone-900 selection:text-white dark:selection:bg-white dark:selection:text-stone-900;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-stone-900 dark:ring-stone-100 ring-offset-2 ring-offset-[#FAF7F2] dark:ring-offset-[#090909];
+  }
+}
+
+@layer components {
+  /* Lisso Clean UI components */
+  .lisso-card {
+    @apply bg-white dark:bg-[#141414] rounded-[24px] shadow-lisso border border-stone-200/60 dark:border-white/[0.10] transition-colors duration-300;
+  }
+
+  .lisso-card-interactive {
+    @apply lisso-card hover:bg-[#F3EEE6] dark:hover:bg-[#1c1c1c];
+  }
+
+  /* Pill Badges */
+  .lisso-pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-tight transition-colors;
+  }
+  .lisso-pill-green {
+    @apply lisso-pill bg-[#E6F8F0] text-[#15803D] dark:bg-[#173828] dark:text-[#4ADE80];
+  }
+  .lisso-pill-red {
+    @apply lisso-pill bg-[#FEECEC] text-[#B91C1C] dark:bg-[#3D1A1A] dark:text-[#F87171];
+  }
+  .lisso-pill-amber {
+    @apply lisso-pill bg-[#FEF5E7] text-[#B45309] dark:bg-[#3D2C17] dark:text-[#FBBF24];
+  }
+  .lisso-pill-blue {
+    @apply lisso-pill bg-[#EBF3FE] text-[#1D4ED8] dark:bg-[#1A2D4A] dark:text-[#60A5FA];
+  }
+  .lisso-pill-purple {
+    @apply lisso-pill bg-[#E7F0E7] text-[#3F6244] dark:bg-[#263C2B] dark:text-[#B5D8B8];
+  }
+  .lisso-pill-neutral {
+    @apply lisso-pill bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300;
+  }
+
+  /* Action Buttons */
+  .lisso-btn-black {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 text-white hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white px-5 py-2.5 text-xs font-semibold transition-all active:scale-95;
+  }
+  .lisso-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-stone-100 text-stone-800 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-200 dark:hover:bg-stone-700 px-4 py-2 text-xs font-semibold transition-all active:scale-95;
+  }
+
+  /* Retain glass classes for compatibility if needed */
+  .glass {
+    @apply border border-stone-200/50 bg-white/80 dark:border-white/[0.08] dark:bg-[#141414]/90 shadow-lisso backdrop-blur-xl;
+  }
+  .glass-strong {
+    @apply border border-stone-200/60 bg-white/95 dark:border-white/[0.1] dark:bg-[#141414]/95 shadow-lisso backdrop-blur-2xl;
+  }
+  .touch-target {
+    @apply min-h-11 min-w-11;
+  }
+
+  .dashboard-screen { @apply relative lg:h-[calc(100dvh-82px)] lg:overflow-hidden flex flex-col gap-2; }
+  .dashboard-screen::after { content: ''; @apply pointer-events-none absolute -bottom-32 left-[18%] h-56 w-[72%] rounded-[50%] bg-[#d5bcaa]/35 blur-[1px] dark:bg-stone-600/10; transform: rotate(-8deg); }
+  .dashboard-intro { @apply relative z-10 flex items-center justify-between gap-4 shrink-0 px-1; }
+  .dashboard-intro h1 { @apply text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100; }
+  .eyebrow { @apply text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500; }
+  .dashboard-actions { @apply flex items-center gap-2; }
+  .dashboard-period { @apply hidden sm:block rounded-full border border-stone-200 bg-white px-3 py-2 text-[11px] font-semibold text-stone-600 hover:border-stone-400 dark:border-white/[0.08] dark:bg-[#141414] dark:text-stone-300; }
+  .dashboard-add { @apply px-3.5 py-2 text-[11px]; }
+  .dashboard-grid { @apply relative z-10 grid flex-1 min-h-0 grid-cols-1 gap-2 xl:grid-cols-[.82fr_1.16fr_.82fr]; }
+  .dashboard-rail, .dashboard-middle-rail { @apply grid min-h-0 gap-3; }
+  .dashboard-left-rail { @apply grid-rows-3; }
+  .dashboard-middle-rail { @apply grid-rows-[auto_1fr_1fr]; }
+  .dashboard-right-rail { @apply grid-rows-2; }
+  .dashboard-card { @apply min-h-0 overflow-hidden rounded-[24px] border-0 bg-white/95 p-4 shadow-[0_14px_35px_rgba(93,72,52,0.08)] dark:border-white/[0.08] dark:bg-[#141414] transition-colors duration-200; }
+  .dashboard-card:hover { @apply bg-[#F6F0E7] dark:bg-[#1c1c1c]; }
+  .dashboard-card h2 { @apply mt-3 truncate text-sm font-extrabold text-stone-900 dark:text-stone-100; }
+  .card-kicker { @apply flex items-center justify-between gap-2 text-[10px] font-bold uppercase tracking-[0.11em] text-stone-500; }
+  .card-kicker > button { @apply normal-case tracking-normal text-[11px] font-bold text-stone-700 rounded-lg px-2 py-1 -mr-2 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:text-stone-200 dark:hover:bg-stone-800; }
+  .dashboard-amount { @apply mt-3 text-2xl font-extrabold tracking-tight text-stone-900 tabular-nums dark:text-stone-100; }
+  .card-copy { @apply mt-1 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400; }
+  .status-good, .status-danger { @apply rounded-full px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal; }
+  .status-good { @apply bg-[#E7F0E7] text-[#3F6244] dark:bg-[#263C2B] dark:text-[#B5D8B8]; }
+  .status-danger { @apply bg-[#F7E4DD] text-[#9D4530] dark:bg-[#4A2720] dark:text-[#F3B5A4]; }
+  .dashboard-meter { @apply mt-4 h-2 overflow-hidden rounded-full bg-[#EEE8DD] dark:bg-stone-800; }
+  .dashboard-meter i { @apply block h-full rounded-full bg-[#f0b937] transition-all duration-500; }
+  .dashboard-link { @apply mt-3 inline-flex items-center gap-1 rounded-lg px-2 py-1 -ml-2 text-[11px] font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
+  .wallet-list-mini { @apply mt-3 grid gap-1 text-[10px] text-stone-500 dark:text-stone-400; }
+  .wallet-list-mini span { @apply flex justify-between gap-2 truncate; }
+  .wallet-list-mini b { @apply font-semibold text-stone-700 dark:text-stone-200; }
+  .progress-copy { @apply mt-2 text-[11px] font-semibold text-[#3F6244] dark:text-[#B5D8B8]; }
+  .dashboard-list { @apply mt-3 grid gap-1.5; }
+  .task-row { @apply grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-2 dark:border-white/[0.06] dark:bg-[#181818] transition-colors; }
+  .task-row > button:first-child { @apply text-stone-400 hover:text-[#59715A]; }
+  .task-title { @apply min-w-0 text-left; }
+  .task-title b, .bill-row b { @apply block truncate text-[11px] font-bold text-stone-800 dark:text-stone-100; }
+  .task-title small, .bill-row small { @apply block truncate text-[10px] text-stone-500 dark:text-stone-400; }
+  .priority { @apply rounded-full px-1.5 py-0.5 text-[9px] font-bold; }
+  .priority-high { @apply bg-[#F7E4DD] text-[#9D4530]; }
+  .priority-med { @apply bg-[#F4E8C9] text-[#87651C]; }
+  .priority-low { @apply bg-[#E7F0E7] text-[#3F6244]; }
+  .bill-row { @apply flex w-full items-center justify-between gap-3 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-2 text-left hover:bg-[#fff5dd] dark:border-white/[0.06] dark:bg-[#181818] dark:hover:bg-[#202020] transition-colors; }
+  .bill-row > span { @apply min-w-0; }
+  .bill-row strong { @apply shrink-0 text-[11px] font-extrabold text-stone-800 dark:text-stone-100; }
+  .note-preview { @apply mt-4 flex w-full gap-3 text-left; }
+  .note-preview > span { @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E7F0E7] text-base; }
+  .note-preview h2 { @apply mt-0; }
+  .note-preview p { @apply mt-1 line-clamp-3 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400; }
+  .empty-mini { @apply mt-5 text-center text-[11px] text-stone-500; }
+  .empty-mini button { @apply mt-2 rounded-lg px-2 py-1 font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
+  .dashboard-column-title { @apply flex items-center justify-between px-1 text-xs font-extrabold text-stone-800 dark:text-stone-100; }
+  .dashboard-column-title > button { @apply inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-stone-500 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:hover:bg-stone-800 dark:hover:text-stone-100; }
+  .dashboard-focus { @apply flex flex-col justify-center bg-[#ffda68] dark:bg-[#1c1c1c] text-stone-900 dark:text-stone-100 dark:border dark:border-white/[0.08]; }
+  .focus-icon { @apply mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 dark:bg-white/10 text-stone-900 dark:text-stone-100; }
+  .dashboard-focus h2 { @apply mt-0 whitespace-normal text-xl leading-tight; }
+  .dashboard-focus .card-copy { @apply text-stone-700 dark:text-stone-300; }
+  .dashboard-focus .dashboard-link { @apply mt-5; }
+
+  @media (max-width: 1279px) {
+    .dashboard-screen { @apply h-auto overflow-visible; }
+    .dashboard-grid { @apply grid-cols-1 md:grid-cols-2; }
+    .dashboard-left-rail, .dashboard-middle-rail, .dashboard-right-rail { @apply grid-rows-none; }
+    .dashboard-middle-rail { @apply md:col-span-2; }
+    .dashboard-card { @apply min-h-[180px]; }
+  }
+}
+
+@layer components { .calendar-grid, .calendar-day, [data-calendar] { outline: none; } .dashboard-card, .lisso-card { outline: none; } }
+
+@layer components {
+  /* Warm FandT finance palette: keep finance screens consistent with the rest of the app. */
+  .finance-screen button.bg-emerald-400, .finance-screen button.bg-emerald-500,
+  .finance-screen a.bg-emerald-400, .finance-screen .bg-emerald-400 { background-color: #26231f !important; color: #fffaf3 !important; }
+  .finance-screen .hover\:bg-emerald-300:hover, .finance-screen .hover\:bg-emerald-100:hover { background-color: #d8c9b8 !important; color: #26231f !important; }
+  .finance-screen .text-emerald-400, .finance-screen .text-emerald-300, .finance-screen .text-emerald-600 { color: #6f6254 !important; }
+  .finance-screen .bg-emerald-50, .finance-screen .bg-emerald-100 { background-color: #eee5da !important; }
+  .finance-screen .border-emerald-500\/40, .finance-screen .border-emerald-500\/30 { border-color: #d8c9b8 !important; }
+  .finance-screen .bg-slate-900\/90 { background-color: rgba(38,35,31,.96) !important; }
+  .dashboard-link:hover, .card-kicker > button:hover, .dashboard-column-title > button:hover { background-color: #e9ddcf !important; color: #3b332b !important; }
+  .dashboard-screen { min-height: 0; }
+  @media (min-width: 1280px) { .dashboard-screen { max-height: calc(100dvh - 82px); overflow: hidden; } }
+}
