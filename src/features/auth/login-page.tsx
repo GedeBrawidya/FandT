@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/app/auth'
+import { supabase } from '@/lib/supabase'
 import { FandtLogo } from '@/components/fandt-logo'
 import {
   AlertCircle,
@@ -31,13 +32,30 @@ export function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  const isProcessingToken = typeof window !== 'undefined' && window.location.hash.includes('access_token')
+  const hasError = Boolean(errorMessage)
+  const isProcessingToken = !hasError && typeof window !== 'undefined' && window.location.hash.includes('access_token')
 
   useEffect(() => {
-    if (!loading && session) {
+    if (session) {
       navigate('/', { replace: true })
+      return
     }
-  }, [session, loading, navigate])
+
+    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      if (accessToken && refreshToken && supabase) {
+        void supabase.auth
+          .setSession({ access_token: accessToken, refresh_token: refreshToken })
+          .then(({ data }) => {
+            if (data?.session) {
+              window.location.replace('/')
+            }
+          })
+      }
+    }
+  }, [session, navigate])
 
   // If user arrives with OAuth tokens in hash, show quick verifying screen while session exchanges
   if (isProcessingToken || (loading && !session && !errorMessage)) {

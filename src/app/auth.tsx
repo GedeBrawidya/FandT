@@ -116,7 +116,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
             if (data?.session) {
               localStorage.removeItem(DEMO_STORAGE_KEY)
               setSession(data.session)
-              // Clean up token hash from browser address bar
+              // If we are currently on /login, instantly redirect to /
+              if (window.location.pathname === '/login') {
+                window.location.replace('/')
+                return
+              }
+              // Otherwise clean up hash from browser address bar
               window.history.replaceState(null, '', window.location.pathname)
             }
             setLoading(false)
@@ -139,6 +144,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (nextSession) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
         setSession(nextSession)
+        // If user is currently on /login, instantly redirect to /
+        if (typeof window !== 'undefined' && window.location.pathname === '/login') {
+          window.location.replace('/')
+          return
+        }
       }
       setLoading(false)
     })
