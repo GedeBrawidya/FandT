@@ -54,6 +54,57 @@ function createGoogleMockSession(name = 'Marco', email = 'marco@gmail.com'): Ses
   }
 }
 
+function parseOAuthHash(hash: string): Session | null {
+  try {
+    if (!hash || !hash.includes('access_token')) return null
+    const params = new URLSearchParams(hash.replace(/^#/, ''))
+    const accessToken = params.get('access_token')
+    const refreshToken = params.get('refresh_token')
+    const expiresIn = Number(params.get('expires_in') || 3600)
+    const expiresAt = Number(params.get('expires_at') || Math.floor(Date.now() / 1000) + expiresIn)
+    const tokenType = params.get('token_type') || 'bearer'
+
+    if (!accessToken) return null
+
+    const parts = accessToken.split('.')
+    if (parts.length !== 3) return null
+
+    const base64Url = parts[1]
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=')
+    const binary = atob(padded)
+    const bytes = new Uint8Array(binary.length)
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i)
+    }
+    const json = new TextDecoder().decode(bytes)
+    const payload = JSON.parse(json)
+
+    const user: User = {
+      id: payload.sub,
+      aud: payload.aud,
+      email: payload.email,
+      phone: payload.phone || '',
+      created_at: new Date((payload.iat || 0) * 1000).toISOString(),
+      role: payload.role || 'authenticated',
+      app_metadata: payload.app_metadata || {},
+      user_metadata: payload.user_metadata || {},
+      updated_at: new Date().toISOString(),
+    }
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken || '',
+      expires_in: expiresIn,
+      expires_at: expiresAt,
+      token_type: 'bearer',
+      user,
+    }
+  } catch {
+    return null
+  }
+}
+
 type AuthContextValue = {
   session: Session | null
   loading: boolean
@@ -69,6 +120,16 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(() => {
     if (typeof window === 'undefined') return null
+
+    // 1. Immediately extract OAuth session if present in URL hash (synchronous, zero-delay)
+    if (window.location.hash.includes('access_token')) {
+      const oauthSession = parseOAuthHash(window.location.hash)
+      if (oauthSession) {
+        return oauthSession
+      }
+    }
+
+    // 2. Fallback to demo session
     const saved = localStorage.getItem(DEMO_STORAGE_KEY)
     if (saved) {
       try {
@@ -80,13 +141,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     return null
   })
 
-  // If URL has OAuth access_token in hash, remain in loading state while exchanging
-  const [loading, setLoading] = useState(() => {
-    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-      return true
-    }
-    return Boolean(supabase && !session)
-  })
+  // If we already have a session (either parsed from hash or demo), loading is false!
+  const [loading, setLoading] = useState(Boolean(supabase && !session))
 
   useEffect(() => {
     // If we have demo session and no OAuth hash, don't block
@@ -100,16 +156,33 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return
     }
 
-    // 1. Recover session from Supabase (built-in detectSessionInUrl handles hash automatically)
+    // If OAuth hash was present, persist into Supabase client & clean address bar
+    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      if (accessToken && refreshToken) {
+        void supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }).then(({ data }) => {
+          if (data?.session) {
+            setSession(data.session)
+          }
+        }).catch(() => {})
+      }
+      // Clean up hash fragment from address bar
+      window.history.replaceState(null, '', window.location.pathname)
+
+      // If user landed on /login with valid session, navigate to root
+      if (window.location.pathname === '/login') {
+        window.location.replace('/')
+        return
+      }
+    }
+
+    // 1. Recover session from Supabase storage
     void supabase.auth.getSession().then(({ data }) => {
       if (data?.session) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
         setSession(data.session)
-        // Clean URL hash if present
-        if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-          window.history.replaceState(null, '', window.location.pathname)
-        }
-        // If user is currently on /login, redirect to root
         if (typeof window !== 'undefined' && window.location.pathname === '/login') {
           window.location.replace('/')
           return
@@ -120,16 +193,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setLoading(false)
     })
 
-    // 2. Real-time auth changes listener (fires SIGNED_IN when OAuth completes)
+    // 2. Real-time auth changes listener
     const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (nextSession) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
         setSession(nextSession)
-        // Clean URL hash if present
-        if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-          window.history.replaceState(null, '', window.location.pathname)
-        }
-        // If user is currently on /login, redirect to root
         if (typeof window !== 'undefined' && window.location.pathname === '/login') {
           window.location.replace('/')
           return
@@ -142,9 +210,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     // 3. Safety timeout to prevent infinite loading state
     const timeout = setTimeout(() => {
-      // If still loading after 3.5s, unblock so UI can show login or dashboard
       setLoading(false)
-    }, 3500)
+    }, 3000)
 
     return () => {
       listener.subscription.unsubscribe()
