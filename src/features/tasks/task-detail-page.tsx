@@ -284,7 +284,6 @@ export function TaskDetailPage() {
               className="flex-1 text-xs font-medium h-10 px-3.5 rounded-2xl bg-stone-100 dark:bg-[#141414] text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
             />
             <button type="submit" className="lisso-btn-black text-xs px-4">
-              <Plus size={14} />
               <span>Add</span>
             </button>
           </form>

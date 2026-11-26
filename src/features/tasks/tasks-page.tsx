@@ -154,7 +154,6 @@ export function TasksPage() {
             onClick={() => handleOpenCreateWithStatus('todo')}
             className="lisso-btn-black text-xs gap-1.5"
           >
-            <Plus size={16} />
             <span>Add Task</span>
           </button>
         </div>

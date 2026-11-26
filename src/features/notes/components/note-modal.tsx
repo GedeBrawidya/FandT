@@ -163,7 +163,7 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
                   className="px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors flex items-center gap-1.5"
                 >
                   <Image size={14} />
-                  <span>+ Cover</span>
+                  <span>Add Cover</span>
                 </button>
               )}
             </div>

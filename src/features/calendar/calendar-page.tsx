@@ -317,7 +317,6 @@ export function CalendarPage() {
                   onClick={() => handleDayDoubleClick(selectedDay)}
                   className="lisso-btn-secondary text-xs inline-flex items-center gap-1.5"
                 >
-                  <Plus size={14} />
                   <span>Add event on this date</span>
                 </button>
               </div>
@@ -361,7 +360,6 @@ export function CalendarPage() {
                   onClick={() => handleDayDoubleClick(selectedDay)}
                   className="w-full mt-2 py-2.5 rounded-2xl border border-dashed border-stone-300 dark:border-stone-700 hover:border-stone-400 dark:hover:border-stone-600 text-xs font-bold text-stone-600 dark:text-stone-400 flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Plus size={14} />
                   <span>Add another event</span>
                 </button>
               </div>
@@ -587,7 +585,7 @@ export function CalendarPage() {
                 }}
                 className="lisso-btn-black text-xs w-full justify-center"
               >
-                + Create Event on this Date
+                Create Event on this Date
               </button>
             </div>
           </div>

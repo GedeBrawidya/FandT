@@ -239,14 +239,13 @@ export function TaskBoardView({ tasks, onEditTask, onAddTask }: TaskBoardViewPro
           )}
         </div>
 
-        {/* Column Footer: + Add a card */}
+        {/* Column Footer: Add a card */}
         <button
           type="button"
           onClick={() => onAddTask?.(statusKey)}
           className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-2xl text-xs font-bold text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 bg-white/40 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.08] border-0 transition-all shadow-2xs"
         >
-          <Plus size={14} strokeWidth={2.5} />
-          <span>+ Add a card</span>
+          <span>Add a card</span>
         </button>
       </div>
     )

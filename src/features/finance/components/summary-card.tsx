@@ -45,10 +45,10 @@ export function SummaryCard({ date = new Date() }: { date?: Date }) {
     )
   }
 
-  // Calculate sum of all wallet balances or use demo fallbacks
-  const totalBalance = (walletBalances ?? []).reduce((acc, w) => acc + (w.balance ?? 0), 0) || 3500000
-  const sisaBudget = allowance?.sisa_budget ?? 1500000
-  const savingsTarget = period?.savings_target ?? allowance?.savings_target ?? 500000
+  // Calculate sum of all wallet balances
+  const totalBalance = (walletBalances ?? []).reduce((acc, w) => acc + (w.balance ?? 0), 0)
+  const sisaBudget = allowance?.sisa_budget ?? 0
+  const savingsTarget = period?.savings_target ?? allowance?.savings_target ?? 0
   const sisaHari = allowance?.sisa_hari ?? Math.max(1, differenceInCalendarDays(new Date(period?.end_date ?? endOfMonth(new Date())), new Date()) + 1)
 
   return (

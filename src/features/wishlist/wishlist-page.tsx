@@ -168,7 +168,6 @@ export function WishlistPage() {
             }}
             className="lisso-btn-black text-xs gap-1.5"
           >
-            <Plus size={16} />
             <span>Add Wishlist Item</span>
           </button>
         </div>
@@ -274,7 +273,7 @@ export function WishlistPage() {
                           onClick={() => setDepositItem(item)}
                           className="lisso-btn-black text-xs px-3.5 py-1.5"
                         >
-                          + Deposit
+                          Deposit
                         </button>
                         <button
                           onClick={() => handleSetAsPeriodTarget(item)}
@@ -351,7 +350,7 @@ export function WishlistPage() {
                       onClick={() => setDepositItem(item)}
                       className="lisso-btn-black text-xs px-4 py-2"
                     >
-                      + Add Deposit
+                      Add Deposit
                     </button>
                   )}
                   <button

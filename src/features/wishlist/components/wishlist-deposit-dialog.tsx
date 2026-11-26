@@ -81,7 +81,6 @@ export function WishlistDepositDialog({ open, onClose, item }: WishlistDepositDi
               disabled={addDeposit.isPending}
               className="lisso-btn-black text-xs gap-1"
             >
-              <Plus size={14} />
               <span>{addDeposit.isPending ? 'Saving...' : 'Add Deposit'}</span>
             </button>
           </div>

@@ -90,7 +90,6 @@ export function BillsPage() {
           }}
           className="lisso-btn-black self-start gap-1.5"
         >
-          <Plus size={16} />
           <span>Add Bill</span>
         </button>
       </div>

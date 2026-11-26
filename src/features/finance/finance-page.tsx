@@ -33,7 +33,6 @@ export function FinancePage() {
           onClick={() => setQuickAddOpen(true)}
           className="lisso-btn-black self-start"
         >
-          <Plus size={16} />
           <span>Add transaction</span>
         </button>
       </div>

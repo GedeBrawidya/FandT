@@ -118,7 +118,7 @@ export function CategoryList() {
         </div>
 
         <Button size="sm" onClick={handleOpenAdd} className="gap-1.5 lisso-btn-black">
-          <Plus size={16} /> Add Category
+          Add Category
         </Button>
       </div>
 

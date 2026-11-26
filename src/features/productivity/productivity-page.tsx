@@ -53,10 +53,10 @@ export function ProductivityPage() {
 
   // Calculations
   const totalSavings = walletBalances.reduce((sum, w) => sum + (w.balance ?? 0), 0)
-  const jatahHarian = allowance?.jatah_harian ?? 50000
+  const jatahHarian = allowance?.jatah_harian ?? 0
   const terpakaiHariIni = allowance?.terpakai_hari_ini ?? 0
-  const sisaHariIni = allowance?.sisa_hari_ini ?? 50000
-  const currentSavingsTarget = period?.savings_target ?? 500000
+  const sisaHariIni = allowance?.sisa_hari_ini ?? 0
+  const currentSavingsTarget = period?.savings_target ?? 0
 
   // Active Wishlist Item
   const activeWishlist: WishlistItem | null = useMemo(() => {
@@ -233,7 +233,7 @@ export function ProductivityPage() {
                 onClick={() => navigate('/wishlist')}
                 className="lisso-btn-black text-xs mt-1"
               >
-                + Add Dream Target
+                Add Dream Target
               </button>
             </div>
           )}

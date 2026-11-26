@@ -114,7 +114,7 @@ export function DashboardPage() {
             {activeMonthYear}
           </button>
           <button onClick={() => setQuickAddOpen(true)} className="lisso-btn-black dashboard-add">
-            <Plus size={16} /> Add transaction
+            Add transaction
           </button>
         </div>
       </section>
