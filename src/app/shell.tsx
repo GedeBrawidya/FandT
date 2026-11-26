@@ -61,10 +61,6 @@ export function AppShell() {
   if (loading) return <FullScreenLoader />
 
   if (!session) {
-    // If URL contains OAuth access_token, auth is currently resolving, stay on loader
-    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-      return <FullScreenLoader />
-    }
     const search = location.search || ''
     const hash = location.hash || ''
     setTimeout(() => navigate(`/login${search}${hash}`, { replace: true }), 0)

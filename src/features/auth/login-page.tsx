@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/app/auth'
-import { supabase } from '@/lib/supabase'
 import { FandtLogo } from '@/components/fandt-logo'
 import {
   AlertCircle,
@@ -33,32 +32,15 @@ export function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const hasError = Boolean(errorMessage)
-  const isProcessingToken = !hasError && typeof window !== 'undefined' && window.location.hash.includes('access_token')
 
   useEffect(() => {
     if (session) {
       navigate('/', { replace: true })
-      return
-    }
-
-    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
-      const accessToken = hashParams.get('access_token')
-      const refreshToken = hashParams.get('refresh_token')
-      if (accessToken && refreshToken && supabase) {
-        void supabase.auth
-          .setSession({ access_token: accessToken, refresh_token: refreshToken })
-          .then(({ data }) => {
-            if (data?.session) {
-              window.location.replace('/')
-            }
-          })
-      }
     }
   }, [session, navigate])
 
-  // If user arrives with OAuth tokens in hash, show quick verifying screen while session exchanges
-  if (isProcessingToken || (loading && !session && !errorMessage)) {
+  // If auth is loading and there's no error, show quick verifying screen
+  if (loading && !errorMessage) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F6F1E8] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 transition-colors">
         <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">

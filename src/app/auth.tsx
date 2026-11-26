@@ -100,60 +100,56 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return
     }
 
-    // 1. Explicitly check and recover OAuth access_token from URL hash
-    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
-      const accessToken = hashParams.get('access_token')
-      const refreshToken = hashParams.get('refresh_token')
-      if (accessToken && refreshToken) {
-        setLoading(true)
-        void supabase.auth
-          .setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          })
-          .then(({ data }) => {
-            if (data?.session) {
-              localStorage.removeItem(DEMO_STORAGE_KEY)
-              setSession(data.session)
-              // If we are currently on /login, instantly redirect to /
-              if (window.location.pathname === '/login') {
-                window.location.replace('/')
-                return
-              }
-              // Otherwise clean up hash from browser address bar
-              window.history.replaceState(null, '', window.location.pathname)
-            }
-            setLoading(false)
-          })
-          .catch(() => {
-            setLoading(false)
-          })
-      }
-    } else {
-      void supabase.auth.getSession().then(({ data }) => {
-        if (data.session) {
-          setSession(data.session)
-        }
-        setLoading(false)
-      })
-    }
-
-    // 2. Listen to real-time auth changes
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      if (nextSession) {
+    // 1. Recover session from Supabase (built-in detectSessionInUrl handles hash automatically)
+    void supabase.auth.getSession().then(({ data }) => {
+      if (data?.session) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
-        setSession(nextSession)
-        // If user is currently on /login, instantly redirect to /
+        setSession(data.session)
+        // Clean URL hash if present
+        if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+          window.history.replaceState(null, '', window.location.pathname)
+        }
+        // If user is currently on /login, redirect to root
         if (typeof window !== 'undefined' && window.location.pathname === '/login') {
           window.location.replace('/')
           return
         }
       }
       setLoading(false)
+    }).catch(() => {
+      setLoading(false)
     })
 
-    return () => listener.subscription.unsubscribe()
+    // 2. Real-time auth changes listener (fires SIGNED_IN when OAuth completes)
+    const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      if (nextSession) {
+        localStorage.removeItem(DEMO_STORAGE_KEY)
+        setSession(nextSession)
+        // Clean URL hash if present
+        if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+          window.history.replaceState(null, '', window.location.pathname)
+        }
+        // If user is currently on /login, redirect to root
+        if (typeof window !== 'undefined' && window.location.pathname === '/login') {
+          window.location.replace('/')
+          return
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setSession(null)
+      }
+      setLoading(false)
+    })
+
+    // 3. Safety timeout to prevent infinite loading state
+    const timeout = setTimeout(() => {
+      // If still loading after 3.5s, unblock so UI can show login or dashboard
+      setLoading(false)
+    }, 3500)
+
+    return () => {
+      listener.subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
   }, [])
 
   const signInWithGoogle = async () => {
