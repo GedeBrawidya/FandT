@@ -38,14 +38,15 @@
 
 ## 3. Set Redirect URL
 
-Masih di **Authentication → URL Configuration**:
+Di Supabase Dashboard, buka **Authentication → URL Configuration**:
 
 | Field | Nilai |
 |---|---|
-| Site URL | `http://localhost:5173` (development) |
-| Additional redirect URLs | URL produksi kamu (mis. `https://ruang-pribadi.vercel.app`) |
+| **Site URL** | `https://fand-t.vercel.app` (untuk production) atau `http://localhost:5173` saat develop lokal |
+| **Redirect URLs** | `https://fand-t.vercel.app/**`<br>`https://fand-t.vercel.app`<br>`https://fand-t.vercel.app/`<br>`http://localhost:5173/**`<br>`http://localhost:5173`<br>`http://localhost:5173/` |
 
-Klik **Save**.
+> [!IMPORTANT]
+> Pastikan `https://fand-t.vercel.app` didaftarkan di **Site URL** atau **Redirect URLs**. Jika tidak terdaftar, Supabase akan menolak redirect dan kembali ke fallback Site URL default (`http://localhost:3000`).
 
 ---
 

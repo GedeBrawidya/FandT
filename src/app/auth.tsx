@@ -115,10 +115,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (!supabase) {
       throw new Error('Supabase client belum terkonfigurasi. Cek .env file.')
     }
+    const redirectTo = typeof window !== 'undefined'
+      ? `${window.location.origin}/`
+      : 'https://fand-t.vercel.app/'
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',

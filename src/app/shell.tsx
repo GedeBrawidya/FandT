@@ -60,7 +60,9 @@ export function AppShell() {
   if (loading) return <FullScreenLoader />
 
   if (!session) {
-    setTimeout(() => navigate('/login', { replace: true }), 0)
+    const search = location.search || ''
+    const hash = location.hash || ''
+    setTimeout(() => navigate(`/login${search}${hash}`, { replace: true }), 0)
     return <FullScreenLoader />
   }
 

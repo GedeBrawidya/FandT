@@ -46,7 +46,7 @@ export function LoginPage() {
 
       if (err) {
         setErrorMessage(
-          `Google OAuth belum aktif di Supabase: "${err}". Anda dapat masuk langsung menggunakan opsi "Masuk dengan Akun Google (Mode Cepat)" di bawah.`
+          `Gagal masuk dengan Google: "${err}". Anda dapat mencoba lagi atau masuk langsung menggunakan opsi "Masuk dengan Akun Google (Mode Cepat)" di bawah.`
         )
         setShowGoogleDirect(true)
       }
