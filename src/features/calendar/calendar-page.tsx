@@ -14,6 +14,7 @@ import {
   isSameDay,
 } from 'date-fns'
 import { useCalendar, type UnifiedCalendarItem } from '@/features/calendar/hooks/use-calendar'
+import { EventFormModal } from '@/features/calendar/components/event-form-modal'
 import { formatRupiah } from '@/lib/format'
 import {
   ChevronLeft,
@@ -38,11 +39,9 @@ export function CalendarPage() {
   const [selectedItemForDetail, setSelectedItemForDetail] = useState<UnifiedCalendarItem | null>(null)
   const [dayDetailModalOpen, setDayDetailModalOpen] = useState(false)
   const [eventModalOpen, setEventModalOpen] = useState(false)
-  const [eventTitle, setEventTitle] = useState('')
   const [eventDate, setEventDate] = useState(() => format(new Date(), 'yyyy-MM-dd'))
-  const [eventTime, setEventTime] = useState('10:00')
 
-  const { items, createEvent, deleteEvent } = useCalendar()
+  const { items, deleteEvent } = useCalendar()
 
   // Month grid calculation
   const monthStart = startOfMonth(currentDate)
@@ -71,7 +70,6 @@ export function CalendarPage() {
   // Handler for double click on any day (prefill date & open create modal)
   const handleDayDoubleClick = (day: Date) => {
     setEventDate(format(day, 'yyyy-MM-dd'))
-    setEventTime('10:00')
     setEventModalOpen(true)
   }
 
@@ -81,26 +79,6 @@ export function CalendarPage() {
     if (typeof window !== 'undefined' && window.innerWidth < 1024 && dayItems.length > 0) {
       setDayDetailModalOpen(true)
     }
-  }
-
-  const handleCreateEvent = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!eventTitle.trim()) return
-
-    const starts_at = new Date(`${eventDate}T${eventTime}:00`).toISOString()
-    const ends_at = new Date(new Date(starts_at).getTime() + 3600000).toISOString()
-
-    await createEvent.mutateAsync({
-      title: eventTitle.trim(),
-      description: null,
-      starts_at,
-      ends_at,
-      all_day: false,
-      google_event_id: null,
-    })
-
-    setEventTitle('')
-    setEventModalOpen(false)
   }
 
   const handleDeleteItem = async (it: UnifiedCalendarItem) => {
@@ -228,12 +206,12 @@ export function CalendarPage() {
                         ? `${dayItems.length} agenda items (Click to view • Double-click to add)`
                         : 'No events (Double-click to add new event)'
                     }
-                    className={`group relative min-h-[78px] sm:min-h-[92px] p-2 rounded-2xl border transition-colors cursor-pointer flex flex-col justify-between ${
+                    className={`group relative min-h-[78px] sm:min-h-[92px] p-2 rounded-2xl border-0 transition-colors cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? 'border-stone-900 dark:border-stone-100 bg-[#F6F1EA] dark:bg-[#181818] shadow-xs ring-1 ring-stone-900/10 dark:ring-white/10'
+                        ? 'bg-[#ECE5D8] dark:bg-[#222222] shadow-xs'
                         : isCurrentDay
-                        ? 'border-amber-400 dark:border-amber-500/80 bg-amber-50/50 dark:bg-amber-950/20'
-                        : 'border-stone-200/50 dark:border-white/[0.05] bg-white/40 dark:bg-[#141414] hover:bg-[#F6F1EA] dark:hover:bg-[#1c1c1c] hover:border-stone-400 dark:hover:border-stone-600'
+                        ? 'bg-amber-500/15 dark:bg-amber-500/20'
+                        : 'bg-white/60 dark:bg-[#141414] hover:bg-[#F6F1EA] dark:hover:bg-[#1c1c1c]'
                     } ${!isCurrentMonth ? 'opacity-30' : ''}`}
                   >
                     <div className="flex items-center justify-between">
@@ -268,12 +246,12 @@ export function CalendarPage() {
                               e.stopPropagation()
                               setSelectedItemForDetail(it)
                             }}
-                            className={`w-full text-left truncate text-[10px] px-1.5 py-0.5 rounded-md font-semibold transition-colors flex items-center gap-1 ${
+                            className={`w-full text-left truncate text-[10px] px-1.5 py-0.5 rounded-md font-semibold transition-colors flex items-center gap-1 border-0 ${
                               isTask
-                                ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-100 dark:hover:bg-blue-950'
+                                ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900'
                                 : isBill
-                                ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/60 hover:bg-amber-100 dark:hover:bg-amber-950'
-                                : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-900/60 hover:bg-emerald-100 dark:hover:bg-emerald-950'
+                                ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900'
+                                : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900'
                             }`}
                             title={`${it.title} (Click to view details)`}
                           >
@@ -340,7 +318,7 @@ export function CalendarPage() {
                   <div
                     key={it.id}
                     onClick={() => setSelectedItemForDetail(it)}
-                    className="p-3.5 rounded-2xl bg-stone-50 hover:bg-[#F6F1EA] dark:bg-[#181818] dark:hover:bg-[#202020] border border-stone-200/60 dark:border-white/[0.06] space-y-1.5 cursor-pointer transition-colors group"
+                    className="p-3.5 rounded-2xl bg-stone-50 hover:bg-[#F6F1EA] dark:bg-[#181818] dark:hover:bg-[#202020] border-0 shadow-xs space-y-1.5 cursor-pointer transition-colors group"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span
@@ -607,80 +585,12 @@ export function CalendarPage() {
         </div>
       )}
 
-      {/* ======================================================== */}
-      {/* MODAL: BUAT AGENDA BARU (Bisa dibuka lewat klik 2x)     */}
-      {/* ======================================================== */}
-      {eventModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="lisso-card w-full max-w-md p-6 flex flex-col gap-5 shadow-2xl relative">
-            <div className="flex items-center justify-between border-b border-stone-100 dark:border-white/[0.08] pb-3">
-              <h3 className="text-base font-extrabold text-stone-900 dark:text-stone-100">
-                Create New Event
-              </h3>
-              <button
-                onClick={() => setEventModalOpen(false)}
-                className="h-8 w-8 rounded-full hover:bg-stone-100 dark:hover:bg-[#181818] flex items-center justify-center text-stone-400 transition-colors"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateEvent} className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-stone-600 dark:text-stone-400 mb-1 block">
-                  Event Title
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g., Project meeting, Consultation, Exam..."
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  className="w-full text-xs font-semibold h-11 px-3.5 rounded-2xl bg-stone-100 dark:bg-[#141414] text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-bold text-stone-600 dark:text-stone-400 mb-1 block">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    className="w-full text-xs font-medium h-11 px-3.5 rounded-2xl bg-stone-100 dark:bg-[#141414] text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-stone-600 dark:text-stone-400 mb-1 block">
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    value={eventTime}
-                    onChange={(e) => setEventTime(e.target.value)}
-                    className="w-full text-xs font-medium h-11 px-3.5 rounded-2xl bg-stone-100 dark:bg-[#141414] text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setEventModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-[#181818] transition-colors"
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="lisso-btn-black text-xs">
-                  Save Event
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* MODAL: BUAT AGENDA BARU */}
+      <EventFormModal
+        open={eventModalOpen}
+        onClose={() => setEventModalOpen(false)}
+        initialDate={eventDate}
+      />
     </div>
   )
 }
