@@ -3,6 +3,7 @@ import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
 const DEMO_STORAGE_KEY = 'ruang_demo_session'
+const AUTH_SESSION_KEY = 'fandt_auth_session'
 
 function createMockSession(name = 'Marco', email = 'marco@ruangpribadi.id'): Session {
   const user: User = {
@@ -125,15 +126,32 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (window.location.hash.includes('access_token')) {
       const oauthSession = parseOAuthHash(window.location.hash)
       if (oauthSession) {
+        try {
+          localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(oauthSession))
+        } catch {}
         return oauthSession
       }
     }
 
-    // 2. Fallback to demo session
-    const saved = localStorage.getItem(DEMO_STORAGE_KEY)
-    if (saved) {
+    // 2. Synchronously read cached active auth session (Google OAuth etc.)
+    const savedAuth = localStorage.getItem(AUTH_SESSION_KEY)
+    if (savedAuth) {
       try {
-        return JSON.parse(saved) as Session
+        const parsed = JSON.parse(savedAuth) as Session
+        // Check if session has not expired (or if expires_at is far future)
+        if (!parsed.expires_at || parsed.expires_at * 1000 > Date.now()) {
+          return parsed
+        }
+      } catch {
+        localStorage.removeItem(AUTH_SESSION_KEY)
+      }
+    }
+
+    // 3. Fallback to demo session
+    const savedDemo = localStorage.getItem(DEMO_STORAGE_KEY)
+    if (savedDemo) {
+      try {
+        return JSON.parse(savedDemo) as Session
       } catch {
         return null
       }
@@ -141,7 +159,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     return null
   })
 
-  // If we already have a session (either parsed from hash or demo), loading is false!
+  // If we already have a session, loading is false!
   const [loading, setLoading] = useState(Boolean(supabase && !session))
 
   useEffect(() => {
@@ -164,17 +182,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (accessToken && refreshToken) {
         void supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }).then(({ data }) => {
           if (data?.session) {
+            try {
+              localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(data.session))
+            } catch {}
             setSession(data.session)
           }
         }).catch(() => {})
       }
-      // Clean up hash fragment from address bar
+      // Clean up hash fragment from address bar smoothly
       window.history.replaceState(null, '', window.location.pathname)
 
-      // If user landed on /login with valid session, navigate to root
+      // If user landed on /login with valid session, redirect smoothly to root
       if (window.location.pathname === '/login') {
-        window.location.replace('/')
-        return
+        window.history.replaceState(null, '', '/')
       }
     }
 
@@ -182,11 +202,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     void supabase.auth.getSession().then(({ data }) => {
       if (data?.session) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
+        try {
+          localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(data.session))
+        } catch {}
         setSession(data.session)
-        if (typeof window !== 'undefined' && window.location.pathname === '/login') {
-          window.location.replace('/')
-          return
-        }
       }
       setLoading(false)
     }).catch(() => {
@@ -197,12 +216,16 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
       if (nextSession) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
+        try {
+          localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(nextSession))
+        } catch {}
         setSession(nextSession)
         if (typeof window !== 'undefined' && window.location.pathname === '/login') {
-          window.location.replace('/')
-          return
+          window.history.replaceState(null, '', '/')
         }
       } else if (event === 'SIGNED_OUT') {
+        localStorage.removeItem(AUTH_SESSION_KEY)
+        localStorage.removeItem(DEMO_STORAGE_KEY)
         setSession(null)
       }
       setLoading(false)
@@ -211,7 +234,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     // 3. Safety timeout to prevent infinite loading state
     const timeout = setTimeout(() => {
       setLoading(false)
-    }, 3000)
+    }, 2000)
 
     return () => {
       listener.subscription.unsubscribe()
@@ -242,17 +265,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signInDemo = (name = 'Marco') => {
     const mock = createMockSession(name)
+    localStorage.removeItem(AUTH_SESSION_KEY)
     localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(mock))
     setSession(mock)
   }
 
   const signInGoogleDirect = (name = 'Marco', email = 'marco@gmail.com') => {
     const mock = createGoogleMockSession(name, email)
+    localStorage.removeItem(AUTH_SESSION_KEY)
     localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(mock))
     setSession(mock)
   }
 
   const signOut = async () => {
+    localStorage.removeItem(AUTH_SESSION_KEY)
     localStorage.removeItem(DEMO_STORAGE_KEY)
     setSession(null)
     if (supabase) {

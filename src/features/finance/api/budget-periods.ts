@@ -7,7 +7,7 @@ export async function getCurrentPeriod(): Promise<(BudgetPeriod & { daily_cap?: 
   if (supabase) {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (user && user.app_metadata?.provider !== 'demo') {
         const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date())
         const { data, error } = await supabase
           .from('budget_periods')
@@ -19,6 +19,7 @@ export async function getCurrentPeriod(): Promise<(BudgetPeriod & { daily_cap?: 
           .limit(1)
           .maybeSingle()
         if (!error && data) return data
+        return null
       }
     } catch {
       // fallback

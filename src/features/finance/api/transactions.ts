@@ -15,34 +15,39 @@ export interface TransactionFilters {
 export async function getTransactions(filters: TransactionFilters = {}): Promise<Transaction[]> {
   if (supabase) {
     try {
-      let query = supabase
-        .from('transactions')
-        .select('*, category:categories(*), wallet:wallets!wallet_id(*), to_wallet:wallets!to_wallet_id(*)')
-        .is('deleted_at', null)
-        .order('occurred_on', { ascending: false })
-        .order('created_at', { ascending: false })
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && user.app_metadata?.provider !== 'demo') {
+        let query = supabase
+          .from('transactions')
+          .select('*, category:categories(*), wallet:wallets!wallet_id(*), to_wallet:wallets!to_wallet_id(*)')
+          .eq('user_id', user.id)
+          .is('deleted_at', null)
+          .order('occurred_on', { ascending: false })
+          .order('created_at', { ascending: false })
 
-      if (filters.start) {
-        query = query.gte('occurred_on', format(filters.start, 'yyyy-MM-dd'))
-      }
-      if (filters.end) {
-        query = query.lte('occurred_on', format(filters.end, 'yyyy-MM-dd'))
-      }
-      if (filters.type) {
-        query = query.eq('type', filters.type)
-      }
-      if (filters.walletId) {
-        query = query.or(`wallet_id.eq.${filters.walletId},to_wallet_id.eq.${filters.walletId}`)
-      }
-      if (filters.categoryId) {
-        query = query.eq('category_id', filters.categoryId)
-      }
-      if (filters.limit) {
-        query = query.limit(filters.limit)
-      }
+        if (filters.start) {
+          query = query.gte('occurred_on', format(filters.start, 'yyyy-MM-dd'))
+        }
+        if (filters.end) {
+          query = query.lte('occurred_on', format(filters.end, 'yyyy-MM-dd'))
+        }
+        if (filters.type) {
+          query = query.eq('type', filters.type)
+        }
+        if (filters.walletId) {
+          query = query.or(`wallet_id.eq.${filters.walletId},to_wallet_id.eq.${filters.walletId}`)
+        }
+        if (filters.categoryId) {
+          query = query.eq('category_id', filters.categoryId)
+        }
+        if (filters.limit) {
+          query = query.limit(filters.limit)
+        }
 
-      const { data, error } = await query
-      if (!error && data && data.length > 0) return data
+        const { data, error } = await query
+        if (!error && data) return data
+        return []
+      }
     } catch {
       // fallback
     }

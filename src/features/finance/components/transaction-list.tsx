@@ -104,8 +104,8 @@ export function TransactionList() {
               onClick={() => setTypeFilter(item.id)}
               className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 typeFilter === item.id
-                  ? 'bg-emerald-400 text-slate-950 shadow-sm'
-                  : 'bg-white/5 text-slate-400 hover:text-slate-200'
+                  ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-sm'
+                  : 'bg-stone-100 dark:bg-stone-900 text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
               }`}
             >
               {item.label}
@@ -120,8 +120,8 @@ export function TransactionList() {
               onClick={() => setCategoryFilter('all')}
               className={`shrink-0 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 categoryFilter === 'all'
-                  ? 'bg-white/20 text-slate-100'
-                  : 'text-slate-500 hover:text-slate-300'
+                  ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
+                  : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
               }`}
             >
               All Categories
@@ -132,8 +132,8 @@ export function TransactionList() {
                 onClick={() => setCategoryFilter(c.id)}
                 className={`shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                   categoryFilter === c.id
-                    ? 'bg-white/20 text-slate-100'
-                    : 'text-slate-500 hover:text-slate-300'
+                    ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
+                    : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
                 }`}
               >
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.color }} />
@@ -177,7 +177,7 @@ export function TransactionList() {
                   return (
                     <Card
                       key={tx.id}
-                      className="group p-3 flex items-center justify-between border border-white/10 hover:border-white/20 transition-colors"
+                      className="group p-3 flex items-center justify-between border border-stone-200/80 dark:border-white/[0.08] hover:border-stone-300 dark:hover:border-white/[0.16] transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {/* Icon */}
@@ -208,12 +208,12 @@ export function TransactionList() {
                                 style={{ backgroundColor: tx.category.color }}
                               />
                             )}
-                            <span className="text-sm font-semibold text-slate-100 truncate">
+                            <span className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
                               {tx.category ? tx.category.name : tx.type === 'transfer' ? 'Wallet Transfer' : 'Uncategorized'}
                             </span>
                           </div>
                           {tx.note && (
-                            <p className="text-xs text-slate-400 truncate mt-0.5 max-w-[200px] sm:max-w-xs">
+                            <p className="text-xs text-stone-500 dark:text-stone-400 truncate mt-0.5 max-w-[200px] sm:max-w-xs">
                               {tx.note}
                             </p>
                           )}
@@ -225,10 +225,10 @@ export function TransactionList() {
                         <span
                           className={`text-sm font-bold tabular-nums shrink-0 ${
                             isExpense
-                              ? 'text-red-400'
+                              ? 'text-red-600 dark:text-red-400'
                               : isIncome
-                              ? 'text-emerald-300'
-                              : 'text-sky-300'
+                              ? 'text-emerald-600 dark:text-emerald-400'
+                              : 'text-sky-600 dark:text-sky-400'
                           }`}
                         >
                           {isExpense ? '-' : isIncome ? '+' : ''}
@@ -239,14 +239,14 @@ export function TransactionList() {
                         <div className="flex items-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => handleEdit(tx)}
-                            className="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-white/10"
+                            className="p-1.5 text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-white/10"
                             title="Edit"
                           >
                             <Edit2 size={14} />
                           </button>
                           <button
                             onClick={() => handleDelete(tx.id)}
-                            className="p-1.5 text-slate-400 hover:text-red-400 rounded-lg hover:bg-red-500/10"
+                            className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20"
                             title="Delete"
                           >
                             <Trash2 size={14} />

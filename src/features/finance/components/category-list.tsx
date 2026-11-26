@@ -86,15 +86,15 @@ export function CategoryList() {
     <div className="space-y-4">
       {/* Tabs */}
       <div className="flex items-center justify-between">
-        <div className="flex gap-1.5 p-1 bg-white/5 rounded-2xl border border-white/10">
+        <div className="flex gap-1.5 p-1 bg-stone-100 dark:bg-stone-900 rounded-2xl border border-stone-200/80 dark:border-white/[0.08]">
           {(['expense', 'income', 'task'] as const).map((kind) => (
             <button
               key={kind}
               onClick={() => setSelectedKind(kind)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 selectedKind === kind
-                  ? 'bg-emerald-400 text-slate-950 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-sm'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
               }`}
             >
               {KIND_LABELS[kind]}
@@ -102,7 +102,7 @@ export function CategoryList() {
           ))}
         </div>
 
-        <Button size="sm" onClick={handleOpenAdd} className="gap-1.5 bg-emerald-400 text-slate-950 font-semibold hover:bg-emerald-300">
+        <Button size="sm" onClick={handleOpenAdd} className="gap-1.5 lisso-btn-black">
           <Plus size={16} /> Add Category
         </Button>
       </div>
@@ -116,9 +116,9 @@ export function CategoryList() {
         </div>
       ) : categories.length === 0 ? (
         <Card className="p-8 text-center flex flex-col items-center justify-center gap-3">
-          <Tag size={28} className="text-slate-500" />
-          <p className="text-sm text-slate-400">No categories found for {KIND_LABELS[selectedKind]}.</p>
-          <Button size="sm" onClick={handleOpenAdd}>
+          <Tag size={28} className="text-stone-400" />
+          <p className="text-sm text-stone-500 dark:text-stone-400">No categories found for {KIND_LABELS[selectedKind]}.</p>
+          <Button size="sm" onClick={handleOpenAdd} className="lisso-btn-black">
             Add Category
           </Button>
         </Card>
@@ -127,28 +127,28 @@ export function CategoryList() {
           {categories.map((c) => (
             <Card
               key={c.id}
-              className="p-3.5 flex items-center justify-between border border-white/10 hover:border-white/20 transition-colors"
+              className="p-3.5 flex items-center justify-between border border-stone-200/80 dark:border-white/[0.08] hover:border-stone-300 dark:hover:border-white/[0.16] transition-colors"
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <span
                   className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm"
                   style={{ backgroundColor: c.color }}
                 />
-                <span className="text-sm font-medium text-slate-100 truncate">
+                <span className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
                   {c.name}
                 </span>
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => handleOpenEdit(c)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-white/10 transition-colors"
                   title="Edit"
                 >
                   <Edit2 size={14} />
                 </button>
                 <button
                   onClick={() => handleArchive(c)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                  className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                   title="Archive"
                 >
                   <Archive size={14} />
@@ -179,7 +179,7 @@ export function CategoryList() {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Color Selection</Label>
+            <Label className="text-stone-800 dark:text-stone-200 font-semibold">Color Selection</Label>
             <div className="flex flex-wrap gap-2 pt-1">
               {PRESET_COLORS.map((c) => (
                 <button
@@ -187,7 +187,7 @@ export function CategoryList() {
                   type="button"
                   onClick={() => setColor(c)}
                   className={`w-7 h-7 rounded-full transition-transform ${
-                    color === c ? 'scale-125 ring-2 ring-white ring-offset-2 ring-offset-slate-900' : 'hover:scale-110'
+                    color === c ? 'scale-125 ring-2 ring-stone-900 dark:ring-white ring-offset-2 ring-offset-[#FAF7F2] dark:ring-offset-stone-900' : 'hover:scale-110'
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -202,7 +202,7 @@ export function CategoryList() {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-semibold"
+              className="lisso-btn-black font-semibold"
             >
               Save
             </Button>

@@ -3,16 +3,19 @@ import type { Category, CategoryInsert } from '@/types/database'
 
 export async function getCategories(kind?: 'expense' | 'income' | 'task'): Promise<Category[]> {
   if (!supabase) return []
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
   let query = supabase
     .from('categories')
     .select('*')
+    .eq('user_id', user.id)
     .eq('is_archived', false)
     .order('sort_order', { ascending: true })
   if (kind) {
     query = query.eq('kind', kind)
   }
   const { data, error } = await query
-  if (error) throw error
+  if (error) return []
   return data ?? []
 }
 

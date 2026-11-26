@@ -36,14 +36,15 @@ export async function getTasks(filter?: TaskFilter): Promise<Task[]> {
         }
 
         const { data, error } = await query
-        if (!error && data && data.length > 0) return data as Task[]
+        if (!error && data) return data as Task[]
+        return []
       }
     } catch {
       // fallback
     }
   }
 
-  // Mock Storage fallback
+  // Mock Storage fallback (only for unauthenticated demo)
   let list = getMockTasks()
   if (filter?.categoryId) {
     list = list.filter((t) => t.category_id === filter.categoryId)

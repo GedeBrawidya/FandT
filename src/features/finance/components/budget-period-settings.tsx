@@ -61,24 +61,24 @@ export function BudgetPeriodSettings() {
   return (
     <Card className="p-6 space-y-6">
       <div className="flex items-center gap-2">
-        <Calendar className="text-emerald-400" size={20} />
-        <h2 className="text-base font-semibold text-slate-100">Pengaturan Periode & Budget</h2>
+        <Calendar className="text-amber-600 dark:text-amber-400" size={20} />
+        <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">Pengaturan Periode &amp; Budget</h2>
       </div>
 
       {/* Current Active Period Card */}
-      <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-        <span className="text-xs text-slate-400 font-medium">Current Active Period</span>
+      <div className="p-4 rounded-2xl bg-stone-50 dark:bg-white/[0.04] border border-stone-200/80 dark:border-white/[0.08] space-y-1.5">
+        <span className="text-xs text-stone-500 dark:text-stone-400 font-medium">Current Active Period</span>
         {period ? (
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-slate-100">
+            <span className="text-sm font-semibold text-stone-900 dark:text-stone-100">
               {formatDate(period.start_date)} — {formatDate(period.end_date)}
             </span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-500/30">
               Active
             </span>
           </div>
         ) : (
-          <p className="text-sm text-amber-300 font-medium">
+          <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">
             No active budget period found for this month.
           </p>
         )}
@@ -87,8 +87,8 @@ export function BudgetPeriodSettings() {
       <form onSubmit={handleSave} className="space-y-4">
         {/* Savings Target */}
         <div className="space-y-1.5">
-          <Label htmlFor="savings-target" className="flex items-center gap-1.5">
-            <Target size={14} className="text-amber-400" /> Period Savings Target (Rp)
+          <Label htmlFor="savings-target" className="flex items-center gap-1.5 text-stone-800 dark:text-stone-200 font-semibold">
+            <Target size={14} className="text-amber-500" /> Period Savings Target (Rp)
           </Label>
           <Input
             id="savings-target"
@@ -99,7 +99,7 @@ export function BudgetPeriodSettings() {
             placeholder="0"
             className="text-base font-semibold"
           />
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-stone-500 dark:text-stone-400">
             Savings target is set aside before calculating the daily allowance.
           </p>
         </div>
@@ -107,12 +107,12 @@ export function BudgetPeriodSettings() {
         {/* Period Start Day (only if no period or initializing) */}
         {!period && (
           <div className="space-y-1.5">
-            <Label htmlFor="period-day">Cycle Start Day / Payday</Label>
+            <Label htmlFor="period-day" className="text-stone-800 dark:text-stone-200 font-semibold">Cycle Start Day / Payday</Label>
             <Select
               id="period-day"
               value={periodStartDay}
               onChange={(e) => setPeriodStartDay(Number(e.target.value))}
-              className="bg-slate-900/80"
+              className="bg-white dark:bg-stone-900"
             >
               {Array.from({ length: 28 }, (_, i) => i + 1).map((d) => (
                 <option key={d} value={d}>
@@ -120,7 +120,7 @@ export function BudgetPeriodSettings() {
                 </option>
               ))}
             </Select>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-stone-500 dark:text-stone-400">
               Your budget cycle runs from this date to the next monthly cycle.
             </p>
           </div>
@@ -128,7 +128,7 @@ export function BudgetPeriodSettings() {
 
         {/* Success Feedback */}
         {successMsg && (
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs">
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs">
             <CheckCircle2 size={16} /> Settings saved successfully!
           </div>
         )}
@@ -136,7 +136,7 @@ export function BudgetPeriodSettings() {
         <Button
           type="submit"
           disabled={isSaving || updateTargetMutation.isPending}
-          className="w-full bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold"
+          className="w-full lisso-btn-black font-bold"
         >
           {isSaving ? 'Saving...' : 'Save Settings'}
         </Button>

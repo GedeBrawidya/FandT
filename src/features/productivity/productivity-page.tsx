@@ -50,7 +50,7 @@ export function ProductivityPage() {
   const [targetSaveSuccess, setTargetSaveSuccess] = useState(false)
 
   // Calculations
-  const totalSavings = walletBalances.reduce((sum, w) => sum + (w.balance ?? 0), 0) || 3500000
+  const totalSavings = walletBalances.reduce((sum, w) => sum + (w.balance ?? 0), 0)
   const jatahHarian = allowance?.jatah_harian ?? 50000
   const terpakaiHariIni = allowance?.terpakai_hari_ini ?? 0
   const sisaHariIni = allowance?.sisa_hari_ini ?? 50000

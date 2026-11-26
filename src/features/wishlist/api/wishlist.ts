@@ -9,13 +9,14 @@ export async function getWishlistItems(): Promise<
   if (supabase) {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (user && user.app_metadata?.provider !== 'demo') {
         const { data, error } = await supabase
           .from('wishlist_items')
           .select('*, contributions:wishlist_contributions(*)')
           .eq('user_id', user.id)
           .order('priority', { ascending: false })
-        if (!error && data && data.length > 0) return data as any
+        if (!error && data) return data as any
+        return []
       }
     } catch {
       // fallback

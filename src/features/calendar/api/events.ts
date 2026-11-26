@@ -6,14 +6,15 @@ export async function getEvents(): Promise<Event[]> {
   if (supabase) {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (user && user.app_metadata?.provider !== 'demo') {
         const { data, error } = await supabase
           .from('events')
           .select('*')
           .eq('user_id', user.id)
           .order('starts_at', { ascending: true })
 
-        if (!error && data && data.length > 0) return data as Event[]
+        if (!error && data) return data as Event[]
+        return []
       }
     } catch {
       // fallback

@@ -6,7 +6,7 @@ import { WalletCards } from 'lucide-react'
 
 export function WalletsPage() {
   const { data: balances = [] } = useWalletBalances()
-  const totalBalance = balances.reduce((acc, w) => acc + (w.balance ?? 0), 0) || 3500000
+  const totalBalance = balances.reduce((acc, w) => acc + (w.balance ?? 0), 0)
 
   return (
     <div className="space-y-6 pb-20">

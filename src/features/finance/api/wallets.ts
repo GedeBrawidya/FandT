@@ -5,12 +5,17 @@ import { archiveMockWallet, getMockWallets, getMockWalletBalances, saveMockWalle
 export async function getWallets(): Promise<Wallet[]> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from('wallets')
-        .select('*')
-        .eq('is_archived', false)
-        .order('created_at', { ascending: true })
-      if (!error && data && data.length > 0) return data
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && user.app_metadata?.provider !== 'demo') {
+        const { data, error } = await supabase
+          .from('wallets')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('is_archived', false)
+          .order('created_at', { ascending: true })
+        if (!error && data) return data
+        return []
+      }
     } catch {
       // fallback
     }
@@ -22,9 +27,10 @@ export async function getWalletBalances(): Promise<WalletBalance[]> {
   if (supabase) {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (user && user.app_metadata?.provider !== 'demo') {
         const { data, error } = await supabase.rpc('get_wallet_balances', { p_user_id: user.id })
-        if (!error && data && data.length > 0) return data
+        if (!error && data) return data
+        return []
       }
     } catch {
       // fallback

@@ -235,13 +235,13 @@ export function DashboardPage() {
             )}
           </article>
 
-          {/* Quick Shortcuts Card (Tumpuk 4 urut atas ke bawah, card tebal & timbul) */}
+          {/* Quick Shortcuts Card (Tumpuk 4 urut atas ke bawah, jarak rapat, 1 tone warna) */}
           <article className="dashboard-card dashboard-shortcuts">
             <div className="card-kicker">
               <span>Quick shortcuts</span>
               <span className="text-[10px] font-semibold text-stone-400">Actions</span>
             </div>
-            <div className="flex-1 flex flex-col justify-between gap-2 xl:gap-2.5 mt-2.5">
+            <div className="flex flex-col gap-1.5 xl:gap-2 mt-2">
               <button
                 type="button"
                 onClick={() => setTaskDialogOpen(true)}
@@ -249,7 +249,7 @@ export function DashboardPage() {
                 title="Create to-do task"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="shortcut-icon bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+                  <div className="shortcut-icon bg-amber-500/12 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300 border border-amber-500/20 dark:border-amber-400/20">
                     <CheckSquare size={16} />
                   </div>
                   <div className="shortcut-text">
@@ -267,12 +267,12 @@ export function DashboardPage() {
                 title="Add calendar event"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="shortcut-icon bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                  <div className="shortcut-icon bg-amber-500/12 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300 border border-amber-500/20 dark:border-amber-400/20">
                     <Calendar size={16} />
                   </div>
                   <div className="shortcut-text">
                     <span className="shortcut-title">Calendar</span>
-                    <span className="shortcut-sub">Add note</span>
+                    <span className="shortcut-sub">Add event</span>
                   </div>
                 </div>
                 <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />
@@ -285,7 +285,7 @@ export function DashboardPage() {
                 title="Add saving target"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="shortcut-icon bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                  <div className="shortcut-icon bg-amber-500/12 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300 border border-amber-500/20 dark:border-amber-400/20">
                     <Target size={16} />
                   </div>
                   <div className="shortcut-text">
@@ -303,12 +303,12 @@ export function DashboardPage() {
                 title="Add note memo"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="shortcut-icon bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+                  <div className="shortcut-icon bg-amber-500/12 text-amber-800 dark:bg-amber-400/15 dark:text-amber-300 border border-amber-500/20 dark:border-amber-400/20">
                     <StickyNote size={16} />
                   </div>
                   <div className="shortcut-text">
-                    <span className="shortcut-title">Noted</span>
-                    <span className="shortcut-sub">Add memo</span>
+                    <span className="shortcut-title">Notes</span>
+                    <span className="shortcut-sub">Add note</span>
                   </div>
                 </div>
                 <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />

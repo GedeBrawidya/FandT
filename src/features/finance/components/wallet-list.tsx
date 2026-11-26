@@ -77,17 +77,17 @@ export function WalletList() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-slate-100">Wallets List</h2>
-        <Button size="sm" onClick={handleAdd} className="gap-1.5 bg-emerald-400 text-slate-950 font-semibold hover:bg-emerald-300">
-          <Plus size={16} /> Add
+        <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">Wallets List</h2>
+        <Button size="sm" onClick={handleAdd} className="gap-1.5 lisso-btn-black">
+          <Plus size={16} /> Add Wallet
         </Button>
       </div>
 
       {wallets.length === 0 ? (
         <Card className="p-8 text-center flex flex-col items-center justify-center gap-3">
-          <WalletIcon size={32} className="text-slate-500" />
-          <p className="text-sm text-slate-400">No active wallets yet.</p>
-          <Button size="sm" onClick={handleAdd}>
+          <WalletIcon size={32} className="text-stone-400" />
+          <p className="text-sm text-stone-500 dark:text-stone-400">No active wallets yet.</p>
+          <Button size="sm" onClick={handleAdd} className="lisso-btn-black">
             Create First Wallet
           </Button>
         </Card>
@@ -98,18 +98,18 @@ export function WalletList() {
             return (
               <Card
                 key={wallet.id}
-                className="p-4 flex items-center justify-between border border-white/10 hover:border-white/20 transition-colors"
+                className="p-4 flex items-center justify-between border border-stone-200/80 dark:border-white/[0.08] hover:border-stone-300 dark:hover:border-white/[0.16] transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="p-2.5 rounded-2xl bg-stone-100 dark:bg-white/[0.05] border border-stone-200/80 dark:border-white/[0.08]">
                     {getTypeIcon(wallet.type)}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-slate-100">{wallet.name}</span>
+                      <span className="font-semibold text-stone-900 dark:text-stone-100">{wallet.name}</span>
                       {getTypeBadge(wallet.type)}
                     </div>
-                    <p className="text-sm font-bold text-emerald-300 tabular-nums mt-0.5">
+                    <p className="text-sm font-bold text-stone-900 dark:text-stone-100 tabular-nums mt-0.5">
                       {formatRupiah(currentBalance)}
                     </p>
                   </div>
@@ -118,14 +118,14 @@ export function WalletList() {
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => handleEdit(wallet)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors"
+                    className="p-2 rounded-lg text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-white/10 transition-colors"
                     title="Edit Wallet"
                   >
                     <Edit2 size={16} />
                   </button>
                   <button
                     onClick={() => handleArchive(wallet.id, wallet.name)}
-                    className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    className="p-2 rounded-lg text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                     title="Archive Wallet"
                   >
                     <Archive size={16} />
