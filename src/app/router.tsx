@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 import { AuthProvider } from '@/app/auth'
 import { AppShell } from '@/app/shell'
 import { Loader2 } from 'lucide-react'
@@ -57,32 +57,37 @@ function withSuspense(element: React.ReactNode) {
   return <Suspense fallback={<PageFallback />}>{element}</Suspense>
 }
 
-function withAuth(element: React.ReactNode) {
-  return <AuthProvider>{element}</AuthProvider>
-}
-
 export const router = createBrowserRouter([
   {
-    path: '/login',
-    element: withAuth(<LoginPage />),
-  },
-  {
-    path: '/',
-    element: withAuth(<AppShell />),
+    element: (
+      <AuthProvider>
+        <Outlet />
+      </AuthProvider>
+    ),
     children: [
-      { index: true, element: withSuspense(<DashboardPage />) },
-      { path: 'finance', element: withSuspense(<FinancePage />) },
-      { path: 'finance/transactions', element: withSuspense(<TransactionsPage />) },
-      { path: 'finance/bills', element: withSuspense(<BillsPage />) },
-      { path: 'finance/wallets', element: withSuspense(<WalletsPage />) },
-      { path: 'finance/settings', element: withSuspense(<FinanceSettingsPage />) },
-      { path: 'tasks', element: withSuspense(<TasksPage />) },
-      { path: 'productivity', element: withSuspense(<ProductivityPage />) },
-      { path: 'tasks/:id', element: withSuspense(<TaskDetailPage />) },
-      { path: 'calendar', element: withSuspense(<CalendarPage />) },
-      { path: 'wishlist', element: withSuspense(<WishlistPage />) },
-      { path: 'settings', element: withSuspense(<SettingsPage />) },
+      {
+        path: '/login',
+        element: <LoginPage />,
+      },
+      {
+        path: '/',
+        element: <AppShell />,
+        children: [
+          { index: true, element: withSuspense(<DashboardPage />) },
+          { path: 'finance', element: withSuspense(<FinancePage />) },
+          { path: 'finance/transactions', element: withSuspense(<TransactionsPage />) },
+          { path: 'finance/bills', element: withSuspense(<BillsPage />) },
+          { path: 'finance/wallets', element: withSuspense(<WalletsPage />) },
+          { path: 'finance/settings', element: withSuspense(<FinanceSettingsPage />) },
+          { path: 'tasks', element: withSuspense(<TasksPage />) },
+          { path: 'productivity', element: withSuspense(<ProductivityPage />) },
+          { path: 'tasks/:id', element: withSuspense(<TaskDetailPage />) },
+          { path: 'calendar', element: withSuspense(<CalendarPage />) },
+          { path: 'wishlist', element: withSuspense(<WishlistPage />) },
+          { path: 'settings', element: withSuspense(<SettingsPage />) },
+        ],
+      },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
-  { path: '*', element: <Navigate to="/" replace /> },
 ])

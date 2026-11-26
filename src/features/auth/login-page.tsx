@@ -31,11 +31,28 @@ export function LoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  const isProcessingToken = typeof window !== 'undefined' && window.location.hash.includes('access_token')
+
   useEffect(() => {
     if (!loading && session) {
       navigate('/', { replace: true })
     }
   }, [session, loading, navigate])
+
+  // If user arrives with OAuth tokens in hash, show quick verifying screen while session exchanges
+  if (isProcessingToken || (loading && !session && !errorMessage)) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#F6F1E8] dark:bg-[#090A0D] text-stone-900 dark:text-stone-100 transition-colors">
+        <div className="flex flex-col items-center gap-4 animate-in fade-in duration-300">
+          <FandtLogo size="lg" />
+          <div className="flex items-center gap-2.5 text-xs font-bold text-stone-600 dark:text-stone-300">
+            <Loader2 size={18} className="animate-spin text-amber-500" />
+            <span>Memverifikasi akun Google…</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Intercept any URL error parameters on mount
   useEffect(() => {

@@ -79,11 +79,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
     return null
   })
-  const [loading, setLoading] = useState(Boolean(supabase && !session))
+
+  // If URL has OAuth access_token in hash, remain in loading state while exchanging
+  const [loading, setLoading] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+      return true
+    }
+    return Boolean(supabase && !session)
+  })
 
   useEffect(() => {
-    // If we already have a local session from localStorage, don't block
-    if (session?.user?.app_metadata?.provider === 'demo' || session?.user?.app_metadata?.provider === 'google') {
+    // If we have demo session and no OAuth hash, don't block
+    if (session?.user?.app_metadata?.provider === 'demo' && (!window.location.hash || !window.location.hash.includes('access_token'))) {
       setLoading(false)
       return
     }
@@ -93,13 +100,41 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return
     }
 
-    void supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        setSession(data.session)
+    // 1. Explicitly check and recover OAuth access_token from URL hash
+    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      if (accessToken && refreshToken) {
+        setLoading(true)
+        void supabase.auth
+          .setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          })
+          .then(({ data }) => {
+            if (data?.session) {
+              localStorage.removeItem(DEMO_STORAGE_KEY)
+              setSession(data.session)
+              // Clean up token hash from browser address bar
+              window.history.replaceState(null, '', window.location.pathname)
+            }
+            setLoading(false)
+          })
+          .catch(() => {
+            setLoading(false)
+          })
       }
-      setLoading(false)
-    })
+    } else {
+      void supabase.auth.getSession().then(({ data }) => {
+        if (data.session) {
+          setSession(data.session)
+        }
+        setLoading(false)
+      })
+    }
 
+    // 2. Listen to real-time auth changes
     const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       if (nextSession) {
         localStorage.removeItem(DEMO_STORAGE_KEY)
