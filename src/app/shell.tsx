@@ -79,11 +79,11 @@ export function AppShell() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors ${location.pathname === '/' ? 'lg:h-screen lg:overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors flex flex-col ${location.pathname === '/' ? 'lg:h-screen lg:max-h-screen lg:overflow-hidden' : ''}`}>
       {/* ======================================================== */}
       {/* TOP HEADER (Solid Floating Island - No bleed-through)   */}
       {/* ======================================================== */}
-      <header className="sticky top-0 z-40 w-full bg-[#FAF7F2]/95 dark:bg-[#090909]/95 backdrop-blur-xl border-b border-stone-200/60 dark:border-white/[0.08] transition-colors">
+      <header className="shrink-0 sticky top-0 z-40 w-full bg-[#FAF7F2]/95 dark:bg-[#090909]/95 backdrop-blur-xl border-b border-stone-200/60 dark:border-white/[0.08] transition-colors">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between">
           {/* Brand: Clean F&T Logo + Name */}
           <NavLink to="/" className="flex items-center gap-2.5 group">
@@ -182,7 +182,7 @@ export function AppShell() {
       {/* ======================================================== */}
       {/* MAIN CONTENT WRAPPER                                     */}
       {/* ======================================================== */}
-      <main className={`max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-3 sm:pt-4 pb-28 lg:pb-2 lg:overflow-hidden' : 'pt-5 sm:pt-7 pb-28 md:pb-8'}`}>
+      <main className={`flex-1 min-h-0 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-2 pb-2 lg:overflow-hidden flex flex-col' : 'pt-5 sm:pt-7 pb-28 md:pb-8'}`}>
         <Outlet />
       </main>
 

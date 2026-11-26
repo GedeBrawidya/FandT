@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { useAuth } from '@/app/auth'
@@ -68,13 +68,38 @@ export function DashboardPage() {
 
   const activeMonthYear = format(new Date(), 'MMMM yyyy')
 
+  useEffect(() => {
+    const lockScroll = () => {
+      if (window.innerWidth >= 1024) {
+        document.documentElement.style.overflow = 'hidden'
+        document.documentElement.style.height = '100%'
+        document.body.style.overflow = 'hidden'
+        document.body.style.height = '100%'
+      } else {
+        document.documentElement.style.overflow = ''
+        document.documentElement.style.height = ''
+        document.body.style.overflow = ''
+        document.body.style.height = ''
+      }
+    }
+    lockScroll()
+    window.addEventListener('resize', lockScroll)
+    return () => {
+      window.removeEventListener('resize', lockScroll)
+      document.documentElement.style.overflow = ''
+      document.documentElement.style.height = ''
+      document.body.style.overflow = ''
+      document.body.style.height = ''
+    }
+  }, [])
+
   const handleSaveNote = async (data: Partial<NoteDoc> & { title: string; content: string }) => {
     await saveNote(data)
     setNoteModalOpen(false)
   }
 
   return (
-    <div className="dashboard-screen animate-in fade-in duration-300">
+    <div className="dashboard-screen flex-1 min-h-0 flex flex-col overflow-hidden animate-in fade-in duration-300">
       <section className="dashboard-intro">
         <div>
           <p className="eyebrow">Today's overview</p>
