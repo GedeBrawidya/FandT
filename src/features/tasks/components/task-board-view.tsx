@@ -60,7 +60,7 @@ export function TaskBoardView({ tasks, onEditTask, onAddTask }: TaskBoardViewPro
       <div
         key={task.id}
         onClick={() => navigate(`/tasks/${task.id}`)}
-        className="group relative bg-white dark:bg-[#181818] hover:bg-[#F6F1EA] dark:hover:bg-[#202020] rounded-2xl p-4 border border-stone-200/80 dark:border-white/[0.08] shadow-xs hover:border-stone-400 dark:hover:border-stone-600 transition-colors cursor-pointer flex flex-col gap-3"
+        className="group relative bg-white dark:bg-[#181818] hover:bg-[#F6F1EA] dark:hover:bg-[#202020] rounded-2xl p-4 border-0 shadow-xs transition-colors cursor-pointer flex flex-col gap-3"
       >
         {/* Top: Checkbox & Title */}
         <div className="flex items-start gap-2.5">
@@ -197,7 +197,7 @@ export function TaskBoardView({ tasks, onEditTask, onAddTask }: TaskBoardViewPro
     headerPill: string
   ) => {
     return (
-      <div className="flex-1 min-w-[300px] max-w-[420px] bg-[#EDE7DD]/80 dark:bg-[#141414] rounded-[26px] p-4 flex flex-col gap-3.5 border border-stone-300/40 dark:border-white/[0.08] shadow-xs">
+      <div className="flex-1 min-w-[300px] max-w-[420px] bg-[#EDE7DD]/80 dark:bg-[#141414] rounded-[26px] p-4 flex flex-col gap-3.5 border-0 shadow-xs">
         {/* Column Header: Title, Count, More Options */}
         <div className="flex items-center justify-between px-2 pt-1">
           <div className="flex items-center gap-2.5">
@@ -243,7 +243,7 @@ export function TaskBoardView({ tasks, onEditTask, onAddTask }: TaskBoardViewPro
         <button
           type="button"
           onClick={() => onAddTask?.(statusKey)}
-          className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-2xl text-xs font-bold text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 bg-white/40 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.08] border border-stone-200/80 dark:border-white/[0.05] transition-all shadow-2xs"
+          className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-2xl text-xs font-bold text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 bg-white/40 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.08] border-0 transition-all shadow-2xs"
         >
           <Plus size={14} strokeWidth={2.5} />
           <span>+ Add a card</span>

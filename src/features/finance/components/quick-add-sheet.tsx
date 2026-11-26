@@ -71,7 +71,7 @@ export function QuickAddSheet({ open, onClose }: QuickAddSheetProps) {
         <div className="grid grid-cols-2 gap-1 rounded-2xl bg-stone-100 p-1 dark:bg-stone-800">
           {(['expense', 'income'] as const).map((type) => (
             <button key={type} type="button" onClick={() => { setTransactionType(type); setSelectedCategoryId('') }} className={cn('rounded-xl py-2 text-xs font-bold transition-colors', transactionType === type ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : 'text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700')}>
-              {type === 'expense' ? 'Uang keluar' : 'Uang masuk'}
+              {type === 'expense' ? 'Expense' : 'Income'}
             </button>
           ))}
         </div>
