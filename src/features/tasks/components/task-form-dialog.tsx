@@ -83,9 +83,9 @@ export function TaskFormDialog({ open, onClose, initialTask, initialStatus }: Ta
 
     if (initialTask) {
       const ok = await confirmDialog({
-        title: 'Simpan Perubahan Tugas',
-        description: `Simpan pembaruan tugas "${title.trim()}"?`,
-        confirmText: 'Simpan',
+        title: 'Save Task',
+        description: `Save updates to "${title.trim()}"?`,
+        confirmText: 'Save',
         variant: 'default',
       })
       if (!ok) return

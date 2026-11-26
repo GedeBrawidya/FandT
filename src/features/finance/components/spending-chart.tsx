@@ -24,25 +24,20 @@ export function SpendingChart() {
       const d = subDays(new Date(), i)
       const dateStr = format(d, 'yyyy-MM-dd')
       const label = format(d, 'dd MMM')
-      // Demo fallbacks if no transactions yet
-      const sampleAmounts = [45000, 32000, 50000, 15000, 48000, 20000, 0]
-      days.push({ dateStr, label, total: sampleAmounts[6 - i] ?? 0 })
+      days.push({ dateStr, label, total: 0 })
     }
 
-    if (transactions.length > 0) {
-      // Reset sample amounts if real transactions exist
-      days.forEach((d) => (d.total = 0))
-      for (const tx of transactions) {
-        if (tx.deleted_at) continue
-        const found = days.find((d) => d.dateStr === tx.occurred_on)
-        if (found) {
-          found.total += tx.amount
-        }
+    for (const tx of transactions) {
+      if (tx.deleted_at) continue
+      const found = days.find((d) => d.dateStr === tx.occurred_on)
+      if (found) {
+        found.total += tx.amount
       }
     }
 
     const maxTotal = Math.max(...days.map((d) => d.total), 1)
-    return { days, maxTotal }
+    const hasAnySpending = days.some((d) => d.total > 0)
+    return { days, maxTotal, hasAnySpending }
   }, [transactions])
 
   if (isLoading) {
@@ -67,6 +62,11 @@ export function SpendingChart() {
       </div>
 
       {/* Bar Chart Container */}
+      {!chartData.hasAnySpending && (
+        <p className="text-[11px] text-stone-400 dark:text-stone-500 text-center -mb-2">
+          No expenses recorded in the last 7 days.
+        </p>
+      )}
       <div className="flex items-end justify-between gap-2 h-44 pt-6 px-1">
         {chartData.days.map((item) => {
           const heightPct = Math.round((item.total / chartData.maxTotal) * 100)

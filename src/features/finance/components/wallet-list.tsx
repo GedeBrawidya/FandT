@@ -31,10 +31,10 @@ export function WalletList() {
 
   const handleArchive = async (id: string, name: string) => {
     const ok = await confirmDialog({
-      title: 'Arsipkan Dompet',
-      description: `Arsipkan dompet "${name}"? Dompet tidak akan muncul lagi di daftar aktif.`,
-      confirmText: 'Arsipkan',
-      cancelText: 'Batal',
+      title: 'Archive Wallet',
+      description: `Archive wallet "${name}"? It will no longer appear in active balance calculations.`,
+      confirmText: 'Archive',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {

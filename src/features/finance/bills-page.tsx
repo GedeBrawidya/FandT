@@ -74,12 +74,12 @@ export function BillsPage() {
   return (
     <div className="space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
+        <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
             Fixed Bills &amp; Obligations
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
             Fixed bills are automatically allocated at the beginning of the period to keep your daily allowance accurate.
           </p>
         </div>
@@ -208,10 +208,10 @@ export function BillsPage() {
                     <button
                       onClick={async () => {
                         const ok = await confirmDialog({
-                          title: 'Hapus Tagihan',
-                          description: `Hapus tagihan "${bill.name}"?`,
-                          confirmText: 'Hapus Tagihan',
-                          cancelText: 'Batal',
+                          title: 'Delete Bill',
+                          description: `Are you sure you want to delete "${bill.name}"?`,
+                          confirmText: 'Delete Bill',
+                          cancelText: 'Cancel',
                           variant: 'destructive',
                         })
                         if (ok) {

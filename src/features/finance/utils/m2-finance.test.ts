@@ -37,8 +37,8 @@ describe('M2 Finance Features', () => {
       ]
 
       const csv = formatTransactionsToCSV(mockTx)
-      expect(csv).toContain('Tanggal,Tipe,Nominal,Kategori,Catatan')
-      expect(csv).toContain('2026-11-23,Pengeluaran,35000,"Makan Siang","Nasi padang ""enak"""')
+      expect(csv).toContain('Date,Type,Amount,Category,Notes')
+      expect(csv).toContain('2026-11-23,Expense,35000,"Makan Siang","Nasi padang ""enak"""')
     })
   })
 

@@ -28,14 +28,14 @@ export function useUpdateSavingsTarget() {
       qc.invalidateQueries({ queryKey: ['budget-period'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Target tabungan disimpan',
-        description: 'Alokasi tabungan periode ini telah diperbarui.',
+        title: 'Savings target saved',
+        description: 'Period savings allocation updated.',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menyimpan target',
+        title: 'Failed to save target',
         description: err?.message,
         variant: 'destructive',
       })
@@ -51,14 +51,14 @@ export function useUpdateDailyCap() {
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['budget-period'] })
       toast({
-        title: 'Jatah harian disimpan',
-        description: 'Batas jatah harian berhasil disinkronkan.',
+        title: 'Daily allowance cap saved',
+        description: 'Daily cap synced successfully.',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menyimpan jatah harian',
+        title: 'Failed to save daily cap',
         description: err?.message,
         variant: 'destructive',
       })

@@ -68,9 +68,9 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
     try {
       if (wallet) {
         const ok = await confirmDialog({
-          title: 'Simpan Dompet',
-          description: `Simpan perubahan pada dompet "${values.name}"?`,
-          confirmText: 'Simpan',
+          title: 'Save Wallet',
+          description: `Save updates to wallet "${values.name}"?`,
+          confirmText: 'Save',
           variant: 'default',
         })
         if (!ok) return

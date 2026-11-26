@@ -18,14 +18,14 @@ export function FinancePage() {
   ]
 
   return (
-    <div className="finance-screen space-y-4 pb-12 lg:pb-6">
+    <div className="finance-screen space-y-5 pb-20 lg:pb-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0 mb-1">
+        <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
             Finance &amp; Budget
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
             Track your daily allowance, transactions and wallet balances in real time.
           </p>
         </div>

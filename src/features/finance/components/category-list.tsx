@@ -61,9 +61,9 @@ export function CategoryList() {
 
     if (editingCategory) {
       const ok = await confirmDialog({
-        title: 'Simpan Kategori',
-        description: `Simpan perubahan kategori "${name.trim()}"?`,
-        confirmText: 'Simpan',
+        title: 'Save Category',
+        description: `Save changes to category "${name.trim()}"?`,
+        confirmText: 'Save',
         variant: 'default',
       })
       if (!ok) return
@@ -86,9 +86,10 @@ export function CategoryList() {
 
   const handleArchive = async (c: Category) => {
     const ok = await confirmDialog({
-      title: 'Arsipkan Kategori',
-      description: `Arsipkan kategori "${c.name}"? Kategori tidak akan muncul di pilihan utama.`,
-      confirmText: 'Arsipkan',
+      title: 'Archive Category',
+      description: `Archive category "${c.name}"? It will no longer appear in primary options.`,
+      confirmText: 'Archive',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {

@@ -23,18 +23,7 @@ export function TopCategoriesCard() {
       map.set(catId, existing)
     }
 
-    let list = Array.from(map.values()).sort((a, b) => b.total - a.total)
-
-    // Demo fallbacks if empty
-    if (list.length === 0) {
-      list = [
-        { name: 'Makan & Minum', color: '#f97316', total: 180000 },
-        { name: 'Transportasi', color: '#3b82f6', total: 95000 },
-        { name: 'Belanja Kebutuhan', color: '#14b8a6', total: 60000 },
-        { name: 'Hiburan', color: '#ec4899', total: 45000 },
-      ]
-    }
-
+    const list = Array.from(map.values()).sort((a, b) => b.total - a.total)
     const grandTotal = list.reduce((acc, c) => acc + c.total, 0)
     return { list: list.slice(0, 5), grandTotal }
   }, [transactions])
@@ -60,37 +49,44 @@ export function TopCategoriesCard() {
         <span className="lisso-pill-neutral">Allocation</span>
       </div>
 
-      <div className="space-y-3.5 pt-1">
-        {categorySpending.list.map((cat) => {
-          const pct =
-            categorySpending.grandTotal > 0
-              ? Math.round((cat.total / categorySpending.grandTotal) * 100)
-              : 0
+      {categorySpending.list.length === 0 ? (
+        <div className="py-10 text-center flex flex-col items-center justify-center gap-1.5 text-stone-400">
+          <p className="text-xs font-semibold text-stone-600 dark:text-stone-300">No expense data yet</p>
+          <p className="text-[11px] text-stone-400 dark:text-stone-500">Expenses you record will show category breakdown here.</p>
+        </div>
+      ) : (
+        <div className="space-y-3.5 pt-1">
+          {categorySpending.list.map((cat) => {
+            const pct =
+              categorySpending.grandTotal > 0
+                ? Math.round((cat.total / categorySpending.grandTotal) * 100)
+                : 0
 
-          return (
-            <div key={cat.name} className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: cat.color }}
-                  />
-                  <span className="font-semibold text-stone-800 dark:text-stone-200">{cat.name}</span>
+            return (
+              <div key={cat.name} className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <span className="font-semibold text-stone-800 dark:text-stone-200">{cat.name}</span>
+                  </div>
+                  <span className="font-extrabold text-stone-900 dark:text-stone-100 tabular-nums">
+                    {formatRupiah(cat.total)} ({pct}%)
+                  </span>
                 </div>
-                <span className="font-extrabold text-stone-900 dark:text-stone-100 tabular-nums">
-                  {formatRupiah(cat.total)} ({pct}%)
-                </span>
+                <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${pct}%`, backgroundColor: cat.color }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2 overflow-hidden">
-                <div
-                  className="h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${pct}%`, backgroundColor: cat.color }}
-                />
-              </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </Card>
   )
 }

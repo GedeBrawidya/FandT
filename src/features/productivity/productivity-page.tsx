@@ -226,14 +226,14 @@ export function ProductivityPage() {
           ) : (
             <div className="py-6 flex flex-col items-center justify-center text-center gap-2 flex-1">
               <p className="text-sm font-semibold text-stone-600 dark:text-stone-400">
-                Belum ada target impian aktif.
+                No active dream target yet.
               </p>
               <button
                 type="button"
                 onClick={() => navigate('/wishlist')}
                 className="lisso-btn-black text-xs mt-1"
               >
-                + Tambah Target Impian
+                + Add Dream Target
               </button>
             </div>
           )}

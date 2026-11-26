@@ -55,9 +55,9 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
     if (!title.trim()) return
     if (note) {
       const ok = await confirmDialog({
-        title: 'Simpan Catatan',
-        description: `Simpan pembaruan catatan "${title.trim()}"?`,
-        confirmText: 'Simpan',
+        title: 'Save Note',
+        description: `Save updates to "${title.trim()}"?`,
+        confirmText: 'Save',
         variant: 'default',
       })
       if (!ok) return
@@ -81,10 +81,10 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
   const handleDelete = async () => {
     if (!note?.id || !onDelete) return
     const ok = await confirmDialog({
-      title: 'Hapus Catatan',
-      description: `Hapus catatan "${title || 'ini'}"? Catatan yang dihapus tidak dapat dipulihkan.`,
-      confirmText: 'Hapus Catatan',
-      cancelText: 'Batal',
+      title: 'Delete Note',
+      description: `Are you sure you want to delete "${title || 'this note'}"? This action cannot be undone.`,
+      confirmText: 'Delete Note',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {

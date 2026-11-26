@@ -96,9 +96,9 @@ export function TransactionForm({ open, onClose, transaction }: TransactionFormP
     try {
       if (transaction) {
         const ok = await confirmDialog({
-          title: 'Simpan Transaksi',
-          description: 'Simpan perubahan pada transaksi ini?',
-          confirmText: 'Simpan',
+          title: 'Save Transaction',
+          description: 'Save updates to this transaction record?',
+          confirmText: 'Save',
           variant: 'default',
         })
         if (!ok) return

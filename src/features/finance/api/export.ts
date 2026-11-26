@@ -1,10 +1,10 @@
 import type { Transaction } from '@/types/database'
 
 export function formatTransactionsToCSV(transactions: Transaction[]): string {
-  const headers = ['Tanggal', 'Tipe', 'Nominal', 'Kategori', 'Catatan']
+  const headers = ['Date', 'Type', 'Amount', 'Category', 'Notes']
   const rows = transactions.map((tx) => {
     const typeLabel =
-      tx.type === 'expense' ? 'Pengeluaran' : tx.type === 'income' ? 'Pemasukan' : 'Transfer'
+      tx.type === 'expense' ? 'Expense' : tx.type === 'income' ? 'Income' : 'Transfer'
     const categoryName = tx.category?.name ?? '-'
     const note = (tx.note ?? '').replace(/"/g, '""')
     return [

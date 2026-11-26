@@ -33,7 +33,7 @@ const DESKTOP_NAV_ITEMS = [
 const MOBILE_NAV_ITEMS = [
   { to: '/', label: 'Home', icon: Home, end: true },
   { to: '/tasks', label: 'Tasks', icon: CheckSquare, end: false },
-  { to: '/finance', label: 'Cards', icon: CreditCard, end: false },
+  { to: '/finance', label: 'Finance', icon: CreditCard, end: false },
   { to: '/productivity', label: 'Notes', icon: FileText, end: false },
   { to: '/calendar', label: 'Agenda', icon: Calendar, end: false },
   { to: '/settings', label: 'Profile', icon: User, end: false },
@@ -59,16 +59,6 @@ export function AppShell() {
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [quickAddOpen, setQuickAddOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 8)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   if (loading) return <FullScreenLoader />
 
@@ -91,22 +81,10 @@ export function AppShell() {
   return (
     <div className={`min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors ${location.pathname === '/' ? 'lg:h-screen lg:overflow-hidden' : ''}`}>
       {/* ======================================================== */}
-      {/* TOP HEADER (FandT Floating Island on Scroll)             */}
+      {/* TOP HEADER (Solid Floating Island - No bleed-through)   */}
       {/* ======================================================== */}
-      <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-          isScrolled
-            ? 'py-2 sm:py-2.5 px-3 sm:px-6'
-            : 'py-2.5 sm:py-3 px-4 sm:px-8'
-        }`}
-      >
-        <div
-          className={`max-w-[1440px] mx-auto flex items-center justify-between transition-all duration-300 ${
-            isScrolled
-              ? 'px-4 sm:px-6 py-2 rounded-2xl sm:rounded-full bg-white/90 dark:bg-[#141414]/90 backdrop-blur-2xl border border-stone-200/90 dark:border-white/[0.12] shadow-[0_10px_35px_-5px_rgba(30,22,12,0.1)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.6)]'
-              : 'px-1 sm:px-2 py-0 bg-transparent'
-          }`}
-        >
+      <header className="sticky top-0 z-40 w-full bg-[#FAF7F2]/95 dark:bg-[#090909]/95 backdrop-blur-xl border-b border-stone-200/60 dark:border-white/[0.08] transition-colors">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between">
           {/* Brand: Clean F&T Logo + Name */}
           <NavLink to="/" className="flex items-center gap-2.5 group">
             <FandtLogo size="sm" />
@@ -204,7 +182,7 @@ export function AppShell() {
       {/* ======================================================== */}
       {/* MAIN CONTENT WRAPPER                                     */}
       {/* ======================================================== */}
-      <main className={`max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-1.5 sm:pt-2 pb-28 lg:pb-2 lg:overflow-hidden' : 'pt-2 sm:pt-4 pb-28 md:pb-8'}`}>
+      <main className={`max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-3 sm:pt-4 pb-28 lg:pb-2 lg:overflow-hidden' : 'pt-5 sm:pt-7 pb-28 md:pb-8'}`}>
         <Outlet />
       </main>
 
@@ -224,9 +202,9 @@ export function AppShell() {
       </div>
 
       {/* ======================================================== */}
-      {/* FLOATING BOTTOM PILL NAVBAR (Mobile only, based on ref)   */}
+      {/* FLOATING BOTTOM PILL NAVBAR (Mobile only, balanced 6-tab)*/}
       {/* ======================================================== */}
-      <nav className="fixed bottom-3 left-3 right-3 sm:left-6 sm:right-6 max-w-lg mx-auto z-40 md:hidden flex items-center justify-between gap-1 p-2 rounded-2xl bg-white/95 dark:bg-[#141414]/95 backdrop-blur-2xl border border-stone-200/90 dark:border-white/[0.12] shadow-[0_12px_36px_-6px_rgba(0,0,0,0.18)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)]">
+      <nav className="fixed bottom-3 left-3 right-3 sm:left-6 sm:right-6 max-w-md mx-auto z-40 md:hidden grid grid-cols-6 items-center p-1.5 rounded-2xl bg-white/95 dark:bg-[#141414]/95 backdrop-blur-2xl border border-stone-200/90 dark:border-white/[0.12] shadow-[0_12px_36px_-6px_rgba(0,0,0,0.18)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)]">
         {MOBILE_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => {
           const isActive = end
             ? location.pathname === to
@@ -236,15 +214,15 @@ export function AppShell() {
               key={to}
               to={to}
               end={end}
-              className={`flex items-center justify-center gap-1.5 transition-all duration-200 min-h-[44px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 py-1.5 px-0.5 rounded-xl transition-all duration-200 min-h-[46px] ${
                 isActive
-                  ? 'flex-1 py-2 px-3 rounded-xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 font-extrabold text-xs shadow-xs'
-                  : 'p-2.5 rounded-xl text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
+                  ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 font-extrabold shadow-xs'
+                  : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
               }`}
               title={label}
             >
-              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              {isActive && <span className="text-xs font-bold tracking-tight whitespace-nowrap">{label}</span>}
+              <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] leading-tight tracking-tight font-semibold truncate max-w-full">{label}</span>
             </NavLink>
           )
         })}

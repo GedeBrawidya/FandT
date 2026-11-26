@@ -25,15 +25,15 @@ export function useCreateWallet() {
       qc.invalidateQueries({ queryKey: ['wallets'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Dompet baru ditambahkan',
-        description: 'Rekening dompet berhasil dibuat.',
+        title: 'New wallet added',
+        description: 'Wallet account created successfully.',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menambahkan dompet',
-        description: err?.message || 'Terjadi kesalahan.',
+        title: 'Failed to add wallet',
+        description: err?.message || 'An error occurred.',
         variant: 'destructive',
       })
     },
@@ -49,15 +49,15 @@ export function useUpdateWallet() {
       qc.invalidateQueries({ queryKey: ['wallets'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Dompet berhasil diperbarui',
-        description: 'Informasi dompet telah disimpan.',
+        title: 'Wallet updated successfully',
+        description: 'Wallet details saved.',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal memperbarui dompet',
-        description: err?.message || 'Terjadi kesalahan.',
+        title: 'Failed to update wallet',
+        description: err?.message || 'An error occurred.',
         variant: 'destructive',
       })
     },
@@ -72,15 +72,15 @@ export function useArchiveWallet() {
       qc.invalidateQueries({ queryKey: ['wallets'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Dompet diarsipkan',
-        description: 'Dompet berhasil diarsipkan.',
+        title: 'Wallet archived',
+        description: 'Wallet has been archived.',
         variant: 'default',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal mengarsipkan dompet',
-        description: err?.message || 'Terjadi kesalahan.',
+        title: 'Failed to archive wallet',
+        description: err?.message || 'An error occurred.',
         variant: 'destructive',
       })
     },

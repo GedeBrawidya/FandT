@@ -38,8 +38,8 @@ export function useCreateTransaction() {
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Transaksi berhasil dicatat',
-        description: 'Pengeluaran/pemasukan telah masuk ke histori.',
+        title: 'Transaction recorded successfully',
+        description: 'Record has been added to history.',
         variant: 'success',
       })
     },
@@ -47,8 +47,8 @@ export function useCreateTransaction() {
       qc.invalidateQueries({ queryKey: ['transactions', 'today'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       toast({
-        title: 'Gagal mencatat transaksi',
-        description: err?.message || 'Terjadi kesalahan saat menyimpan transaksi.',
+        title: 'Failed to record transaction',
+        description: err?.message || 'An error occurred while saving transaction.',
         variant: 'destructive',
       })
     },
@@ -64,15 +64,15 @@ export function useSoftDeleteTransaction() {
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Transaksi dihapus',
-        description: 'Transaksi telah dipindahkan ke sampah.',
+        title: 'Transaction deleted',
+        description: 'Transaction record removed.',
         variant: 'default',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menghapus transaksi',
-        description: err?.message || 'Terjadi kendala.',
+        title: 'Failed to delete transaction',
+        description: err?.message || 'An error occurred.',
         variant: 'destructive',
       })
     },
@@ -88,8 +88,8 @@ export function useUndoDeleteTransaction() {
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Transaksi dipulihkan',
-        description: 'Catatan transaksi telah dikembalikan.',
+        title: 'Transaction restored',
+        description: 'Transaction record has been restored.',
         variant: 'success',
       })
     },
@@ -106,15 +106,15 @@ export function useUpdateTransaction() {
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
       toast({
-        title: 'Transaksi berhasil diperbarui',
-        description: 'Perubahan nominal dan rincian transaksi telah disimpan.',
+        title: 'Transaction updated successfully',
+        description: 'Transaction changes saved.',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal memperbarui transaksi',
-        description: err?.message || 'Terjadi kesalahan.',
+        title: 'Failed to update transaction',
+        description: err?.message || 'An error occurred.',
         variant: 'destructive',
       })
     },

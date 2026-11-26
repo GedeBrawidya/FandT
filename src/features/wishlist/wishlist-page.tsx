@@ -93,10 +93,10 @@ export function WishlistPage() {
   // Set wishlist target as period savings target
   const handleDeleteItem = async (item: WishlistItem) => {
     const ok = await confirmDialog({
-      title: 'Hapus Target Impian',
-      description: `Apakah Anda yakin ingin menghapus "${item.name}"?`,
-      confirmText: 'Hapus Impian',
-      cancelText: 'Batal',
+      title: 'Delete Dream Target',
+      description: `Are you sure you want to delete "${item.name}"?`,
+      confirmText: 'Delete Target',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {
@@ -106,7 +106,7 @@ export function WishlistPage() {
 
   const handleSetAsPeriodTarget = async (item: WishlistItem) => {
     if (!period) {
-      alert('Atur periode keuangan terlebih dahulu di menu Pengaturan.')
+      alert('Please set up your budget cycle period first in Settings.')
       return
     }
     // Set 20% of target as monthly savings target or full target
@@ -312,7 +312,7 @@ export function WishlistPage() {
                       <button
                         onClick={() => handleDeleteItem(item)}
                         className="h-8 w-8 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-                        title="Hapus impian"
+                        title="Delete dream target"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -367,7 +367,7 @@ export function WishlistPage() {
                   <button
                     onClick={() => handleDeleteItem(item)}
                     className="h-8 w-8 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-                    title="Hapus impian"
+                    title="Delete dream target"
                   >
                     <Trash2 size={14} />
                   </button>

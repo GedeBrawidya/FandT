@@ -111,12 +111,12 @@ export function TasksPage() {
   return (
     <div className="space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
+        <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
             Tasks &amp; Priorities
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
             Manage daily tasks, deadlines, and track progress in List or Board view.
           </p>
         </div>

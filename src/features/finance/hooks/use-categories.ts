@@ -17,13 +17,13 @@ export function useCreateCategory() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['categories'] })
       toast({
-        title: 'Kategori baru ditambahkan',
+        title: 'Category added successfully',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menambahkan kategori',
+        title: 'Failed to add category',
         description: err?.message,
         variant: 'destructive',
       })
@@ -39,13 +39,13 @@ export function useUpdateCategory() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['categories'] })
       toast({
-        title: 'Kategori berhasil diperbarui',
+        title: 'Category updated successfully',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal memperbarui kategori',
+        title: 'Failed to update category',
         description: err?.message,
         variant: 'destructive',
       })
@@ -60,13 +60,13 @@ export function useArchiveCategory() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['categories'] })
       toast({
-        title: 'Kategori diarsipkan',
+        title: 'Category archived',
         variant: 'default',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal mengarsipkan kategori',
+        title: 'Failed to archive category',
         description: err?.message,
         variant: 'destructive',
       })

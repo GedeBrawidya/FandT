@@ -23,10 +23,10 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
   const handleDelete = async () => {
     if (!initialItem) return
     const ok = await confirmDialog({
-      title: 'Hapus Target Impian',
-      description: `Hapus target impian "${initialItem.name}"?`,
-      confirmText: 'Hapus Impian',
-      cancelText: 'Batal',
+      title: 'Delete Dream Target',
+      description: `Are you sure you want to delete "${initialItem.name}"?`,
+      confirmText: 'Delete Target',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {
@@ -62,9 +62,9 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
 
     if (initialItem) {
       const ok = await confirmDialog({
-        title: 'Simpan Target Impian',
-        description: `Simpan perubahan pada "${name.trim()}"?`,
-        confirmText: 'Simpan',
+        title: 'Save Dream Target',
+        description: `Save changes to "${name.trim()}"?`,
+        confirmText: 'Save',
         variant: 'default',
       })
       if (!ok) return
@@ -204,7 +204,7 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
                 disabled={deleteItem.isPending}
                 className="px-3.5 py-2 rounded-full text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30 transition-colors"
               >
-                {deleteItem.isPending ? 'Menghapus...' : 'Hapus Item'}
+                {deleteItem.isPending ? 'Deleting...' : 'Delete Item'}
               </button>
             ) : <div />}
             <div className="flex items-center gap-2">

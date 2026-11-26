@@ -139,10 +139,10 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
             onClick={async (e) => {
               e.stopPropagation()
               const ok = await confirmDialog({
-                title: 'Hapus Tugas',
-                description: `Hapus tugas "${task.title}"?`,
-                confirmText: 'Hapus',
-                cancelText: 'Batal',
+                title: 'Delete Task',
+                description: `Are you sure you want to delete "${task.title}"?`,
+                confirmText: 'Delete',
+                cancelText: 'Cancel',
                 variant: 'destructive',
               })
               if (ok) {

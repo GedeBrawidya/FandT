@@ -2,27 +2,37 @@ import { useState } from 'react'
 import { TransactionList } from '@/features/finance/components/transaction-list'
 import { TransactionForm } from '@/features/finance/components/transaction-form'
 import { QuickAddSheet } from '@/features/finance/components/quick-add-sheet'
-import { CSVExportButton } from '@/features/finance/components/csv-export-button'
+import { DateFilterPopover, type DateFilterValue } from '@/features/finance/components/date-filter-popover'
 import { Plus, Zap } from 'lucide-react'
+import { startOfDay, endOfDay } from 'date-fns'
 
 export function TransactionsPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [quickAddOpen, setQuickAddOpen] = useState(false)
+  const [dateFilter, setDateFilter] = useState<DateFilterValue>(() => {
+    const now = new Date()
+    return {
+      scope: 'day',
+      date: now,
+      start: startOfDay(now),
+      end: endOfDay(now),
+    }
+  })
 
   return (
     <div className="space-y-6 pb-20 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
+        <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
             Transaction History
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
             Track income, expenses, and wallet transfers in real time.
           </p>
         </div>
         <div className="flex items-center gap-2 self-start flex-wrap">
-          <CSVExportButton />
+          <DateFilterPopover value={dateFilter} onChange={setDateFilter} />
           <button
             onClick={() => setQuickAddOpen(true)}
             className="lisso-btn-secondary text-xs gap-1.5"
@@ -42,7 +52,7 @@ export function TransactionsPage() {
       </div>
 
       {/* Transaction List with filters and grouped dates */}
-      <TransactionList />
+      <TransactionList dateFilter={dateFilter} />
 
       {/* Forms */}
       <TransactionForm open={formOpen} onClose={() => setFormOpen(false)} />

@@ -12,9 +12,14 @@ import { TransactionForm } from '@/features/finance/components/transaction-form'
 import { formatRupiah, formatDate } from '@/lib/format'
 import type { Transaction } from '@/types/database'
 import { confirmDialog } from '@/components/ui/confirm-dialog'
+import type { DateFilterValue } from '@/features/finance/components/date-filter-popover'
 import { Trash2, Edit2, RotateCcw, ArrowUpRight, ArrowDownLeft, ArrowLeftRight, Receipt } from 'lucide-react'
 
-export function TransactionList() {
+interface TransactionListProps {
+  dateFilter?: DateFilterValue
+}
+
+export function TransactionList({ dateFilter }: TransactionListProps = {}) {
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
@@ -26,6 +31,8 @@ export function TransactionList() {
   const { data: transactions = [], isLoading } = useTransactions({
     type: typeFilter === 'all' ? undefined : typeFilter,
     categoryId: categoryFilter === 'all' ? undefined : categoryFilter,
+    start: dateFilter?.start,
+    end: dateFilter?.end,
   })
 
   const softDeleteMutation = useSoftDeleteTransaction()
@@ -33,10 +40,10 @@ export function TransactionList() {
 
   const handleDelete = async (id: string) => {
     const ok = await confirmDialog({
-      title: 'Hapus Transaksi',
-      description: 'Hapus catatan transaksi ini? Transaksi akan dipindahkan ke tempat sampah.',
-      confirmText: 'Hapus Transaksi',
-      cancelText: 'Batal',
+      title: 'Delete Transaction',
+      description: 'Are you sure you want to delete this transaction record?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (!ok) return

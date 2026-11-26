@@ -42,8 +42,9 @@ export function SettingsPage() {
   const handleResetCache = async () => {
     const ok = await confirmDialog({
       title: 'Reset Cache & Sign Out',
-      description: 'Bersihkan cache sesi lokal dan keluar dari akun?',
-      confirmText: 'Reset & Keluar',
+      description: 'Clear local session cache and sign out of account?',
+      confirmText: 'Reset & Sign Out',
+      cancelText: 'Cancel',
       variant: 'destructive',
     })
     if (ok) {

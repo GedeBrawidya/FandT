@@ -179,10 +179,10 @@ export function TaskDetailPage() {
             <button
               onClick={async () => {
                 const ok = await confirmDialog({
-                  title: 'Hapus Tugas',
-                  description: `Hapus tugas "${displayTask.title}"?`,
-                  confirmText: 'Hapus',
-                  cancelText: 'Batal',
+                  title: 'Delete Task',
+                  description: `Are you sure you want to delete "${displayTask.title}"?`,
+                  confirmText: 'Delete',
+                  cancelText: 'Cancel',
                   variant: 'destructive',
                 })
                 if (ok) {

@@ -61,7 +61,7 @@ export function useCalendar() {
       list.push({
         id: `bill-${bill.id}`,
         type: 'bill',
-        title: `Tagihan: ${bill.name}`,
+        title: `Bill: ${bill.name}`,
         date: `${currentYearMonth}-${dayStr}`,
         color: '#f59e0b',
         amount: bill.amount,

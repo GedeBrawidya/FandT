@@ -73,7 +73,7 @@ export async function updateWallet(id: string, input: Partial<Omit<WalletInsert,
     }
   }
   const current = getMockWallets().find((wallet) => wallet.id === id)
-  if (!current) throw new Error('Dompet tidak ditemukan')
+  if (!current) throw new Error('Wallet not found')
   return saveMockWallet({ ...current, ...input })
 }
 

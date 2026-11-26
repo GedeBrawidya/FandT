@@ -85,9 +85,10 @@ export function CalendarPage() {
   const handleDeleteItem = async (it: UnifiedCalendarItem) => {
     if (it.type === 'event' && it.rawItem?.id) {
       const ok = await confirmDialog({
-        title: 'Hapus Agenda',
-        description: `Hapus agenda "${it.title}"?`,
-        confirmText: 'Hapus Agenda',
+        title: 'Delete Event',
+        description: `Are you sure you want to delete "${it.title}"?`,
+        confirmText: 'Delete Event',
+        cancelText: 'Cancel',
         variant: 'destructive',
       })
       if (!ok) return
@@ -99,12 +100,12 @@ export function CalendarPage() {
   return (
     <div className="space-y-5 pb-16 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
+        <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
-            Calendar &amp; agenda
+            Calendar &amp; Agenda
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
             Select a date to view its schedule, or double-click a date to create an event.
           </p>
         </div>

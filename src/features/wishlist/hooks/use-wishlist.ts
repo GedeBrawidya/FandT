@@ -22,14 +22,14 @@ export function useWishlist() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['wishlist-items'] })
       toast({
-        title: 'Target impian berhasil ditambahkan',
-        description: 'Mulai menabung untuk mewujudkan impian ini!',
+        title: 'Dream target added successfully',
+        description: 'Start saving towards your goal!',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menambahkan impian',
+        title: 'Failed to add dream target',
         description: err?.message,
         variant: 'destructive',
       })
@@ -42,13 +42,13 @@ export function useWishlist() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['wishlist-items'] })
       toast({
-        title: 'Target impian berhasil diperbarui',
+        title: 'Dream target updated successfully',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal memperbarui impian',
+        title: 'Failed to update dream target',
         description: err?.message,
         variant: 'destructive',
       })
@@ -60,13 +60,13 @@ export function useWishlist() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['wishlist-items'] })
       toast({
-        title: 'Target impian berhasil dihapus',
+        title: 'Dream target removed',
         variant: 'default',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal menghapus impian',
+        title: 'Failed to delete dream target',
         description: err?.message,
         variant: 'destructive',
       })
@@ -78,14 +78,14 @@ export function useWishlist() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['wishlist-items'] })
       toast({
-        title: 'Setoran tabungan berhasil dicatat',
-        description: 'Progres impianmu semakin mendekati target!',
+        title: 'Savings deposit recorded',
+        description: 'Your progress is getting closer to the goal!',
         variant: 'success',
       })
     },
     onError: (err: any) => {
       toast({
-        title: 'Gagal mencatat setoran tabungan',
+        title: 'Failed to record savings deposit',
         description: err?.message,
         variant: 'destructive',
       })

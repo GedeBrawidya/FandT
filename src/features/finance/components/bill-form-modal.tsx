@@ -48,9 +48,9 @@ export function BillFormModal({ open, onClose, initialData }: BillFormModalProps
 
     if (initialData) {
       const ok = await confirmDialog({
-        title: 'Simpan Tagihan',
-        description: `Simpan pembaruan tagihan "${name.trim()}"?`,
-        confirmText: 'Simpan',
+        title: 'Save Bill',
+        description: `Save updates to bill "${name.trim()}"?`,
+        confirmText: 'Save',
         variant: 'default',
       })
       if (!ok) return

@@ -77,7 +77,7 @@ export function LoginPage() {
     try {
       await signInWithGoogle()
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Gagal menghubungkan ke Google'
+      const msg = err instanceof Error ? err.message : 'Failed to connect with Google'
       setErrorMessage(msg)
       setGoogleLoading(false)
     }

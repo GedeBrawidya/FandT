@@ -75,8 +75,8 @@ function PageErrorBoundary() {
   return (
     <div className="flex min-h-[50vh] items-center justify-center p-4">
       <div className="lisso-card p-6 max-w-sm w-full text-center space-y-3">
-        <p className="text-sm font-bold text-stone-900 dark:text-stone-100">Gagal memuat halaman</p>
-        <p className="text-xs text-stone-500 dark:text-stone-400">Terjadi pembaruan aplikasi. Silakan muat ulang.</p>
+        <p className="text-sm font-bold text-stone-900 dark:text-stone-100">Failed to load page</p>
+        <p className="text-xs text-stone-500 dark:text-stone-400">Application was updated. Please refresh.</p>
         <button
           onClick={() => {
             sessionStorage.removeItem('fandt_chunk_reload')
