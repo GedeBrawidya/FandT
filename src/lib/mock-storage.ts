@@ -3,6 +3,7 @@
 // =============================================================
 
 import type { Task, Subtask, WishlistItem, BudgetPeriod, DailyAllowance, Wallet, Bill, Transaction, Category, WalletBalance, Event } from '@/types/database'
+import { format, startOfMonth, endOfMonth, differenceInCalendarDays } from 'date-fns'
 import { sortByDeadline } from '@/features/tasks/utils/task-groups'
 
 export interface NoteDoc {
@@ -32,16 +33,19 @@ interface AppDataState {
 const STORAGE_KEY = 'ruang_app_data_v2'
 
 function getInitialState(): AppDataState {
-  const now = new Date().toISOString()
+  const today = new Date()
+  const now = today.toISOString()
+  const startMonthStr = format(startOfMonth(today), 'yyyy-MM-dd')
+  const endMonthStr = format(endOfMonth(today), 'yyyy-MM-dd')
   return {
     period: {
       id: 'demo-period-1',
       user_id: '00000000-0000-0000-0000-000000000001',
-      start_date: '2026-11-25',
-      end_date: '2026-12-24',
+      start_date: startMonthStr,
+      end_date: endMonthStr,
       savings_target: 500000,
       daily_cap: 50000,
-      note: 'Periode aktif gajian 25 Nov - 24 Des',
+      note: `Active period ${format(today, 'MMMM yyyy')}`,
       created_at: now,
       updated_at: now,
     },
@@ -253,6 +257,14 @@ export function loadAppState(): AppDataState {
     if (!parsed.events) {
       parsed.events = getInitialState().events
     }
+    // Migrate legacy hardcoded period dates to active month
+    if (parsed.period && (parsed.period.start_date === '2026-11-25' || parsed.period.end_date === '2026-12-24')) {
+      const today = new Date()
+      parsed.period.start_date = format(startOfMonth(today), 'yyyy-MM-dd')
+      parsed.period.end_date = format(endOfMonth(today), 'yyyy-MM-dd')
+      parsed.period.note = `Active period ${format(today, 'MMMM yyyy')}`
+      saveAppState(parsed)
+    }
     return parsed
   } catch {
     const init = getInitialState()
@@ -275,10 +287,12 @@ export function getMockDailyAllowance(date: Date = new Date()): DailyAllowance {
   const savingsTarget = state.period.savings_target
   const unpaidBills = state.bills.filter((b) => b.is_active).reduce((sum, b) => sum + b.amount, 0)
 
-  // Calculate days remaining
+  // Calculate real-time days remaining (inclusive of today)
   const endDate = new Date(state.period.end_date)
-  const diffTime = endDate.getTime() - date.getTime()
-  const sisaHari = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)))
+  const todayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const endPeriod = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
+  const diffDays = differenceInCalendarDays(endPeriod, todayStart)
+  const sisaHari = Math.max(1, diffDays + 1)
 
   // Formula Jatah Harian
   const budgetVariabel = Math.max(0, totalSaldo - savingsTarget - unpaidBills)

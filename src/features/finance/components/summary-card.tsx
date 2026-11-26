@@ -1,3 +1,4 @@
+import { differenceInCalendarDays, endOfMonth } from 'date-fns'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useWalletBalances } from '@/features/finance/hooks/use-wallets'
@@ -48,7 +49,7 @@ export function SummaryCard({ date = new Date() }: { date?: Date }) {
   const totalBalance = (walletBalances ?? []).reduce((acc, w) => acc + (w.balance ?? 0), 0) || 3500000
   const sisaBudget = allowance?.sisa_budget ?? 1500000
   const savingsTarget = period?.savings_target ?? allowance?.savings_target ?? 500000
-  const sisaHari = allowance?.sisa_hari ?? 22
+  const sisaHari = allowance?.sisa_hari ?? Math.max(1, differenceInCalendarDays(new Date(period?.end_date ?? endOfMonth(new Date())), new Date()) + 1)
 
   return (
     <Card className="p-6 flex flex-col gap-4">
