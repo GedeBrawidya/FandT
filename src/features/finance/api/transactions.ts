@@ -1,7 +1,14 @@
 import { format } from 'date-fns'
 import { supabase } from '@/lib/supabase'
 import type { Transaction, TransactionInsert } from '@/types/database'
-import { getMockTransactions, addMockTransaction } from '@/lib/mock-storage'
+import {
+  getMockTransactions,
+  addMockTransaction,
+  updateMockTransaction,
+  deleteMockTransaction,
+  undoDeleteMockTransaction,
+  isUuid,
+} from '@/lib/mock-storage'
 
 export interface TransactionFilters {
   start?: Date
@@ -59,7 +66,7 @@ export async function createTransaction(input: Omit<TransactionInsert, 'user_id'
   if (supabase) {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
+      if (user && user.app_metadata?.provider !== 'demo') {
         const { data, error } = await supabase
           .from('transactions')
           .insert({ ...input, user_id: user.id })
@@ -75,45 +82,65 @@ export async function createTransaction(input: Omit<TransactionInsert, 'user_id'
 }
 
 export async function updateTransaction(id: string, input: Partial<Omit<TransactionInsert, 'user_id'>>): Promise<Transaction> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { data, error } = await supabase
-    .from('transactions')
-    .update({ ...input, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select('*, category:categories(*)')
-    .single()
-  if (error) throw error
-  return data
+  if (supabase && isUuid(id)) {
+    try {
+      const { data, error } = await supabase
+        .from('transactions')
+        .update({ ...input, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select('*, category:categories(*)')
+        .single()
+      if (!error && data) return data
+    } catch {
+      // fallback
+    }
+  }
+  return updateMockTransaction(id, input as any)
 }
 
 export async function softDeleteTransaction(id: string): Promise<void> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { error } = await supabase
-    .from('transactions')
-    .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-  if (error) throw error
+  if (supabase && isUuid(id)) {
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', id)
+      if (!error) return
+    } catch {
+      // fallback
+    }
+  }
+  deleteMockTransaction(id)
 }
 
 export async function undoDeleteTransaction(id: string): Promise<void> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { error } = await supabase
-    .from('transactions')
-    .update({ deleted_at: null })
-    .eq('id', id)
-  if (error) throw error
+  if (supabase && isUuid(id)) {
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .update({ deleted_at: null })
+        .eq('id', id)
+      if (!error) return
+    } catch {
+      // fallback
+    }
+  }
+  undoDeleteMockTransaction(id)
 }
 
 export async function getTodayTransactions(): Promise<Transaction[]> {
   if (!supabase) return []
-  // Jakarta timezone: use current date in Asia/Jakarta
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date())
-  const { data, error } = await supabase
-    .from('transactions')
-    .select('*, category:categories(*)')
-    .eq('occurred_on', today)
-    .is('deleted_at', null)
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  return data ?? []
+  try {
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta' }).format(new Date())
+    const { data, error } = await supabase
+      .from('transactions')
+      .select('*, category:categories(*)')
+      .eq('occurred_on', today)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+    if (!error && data) return data
+  } catch {
+    // fallback
+  }
+  return []
 }

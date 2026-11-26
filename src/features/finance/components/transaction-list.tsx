@@ -235,21 +235,31 @@ export function TransactionList() {
                           {formatRupiah(tx.amount)}
                         </span>
 
-                        {/* Action buttons (desktop hover, mobile always visible) */}
-                        <div className="flex items-center opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Action buttons (always visible and easy to click) */}
+                        <div className="flex items-center gap-1 shrink-0 ml-1">
                           <button
-                            onClick={() => handleEdit(tx)}
-                            className="p-1.5 text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-white/10"
-                            title="Edit"
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleEdit(tx)
+                            }}
+                            className="p-1.5 rounded-lg text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 border border-stone-200/60 dark:border-white/[0.08] transition-colors"
+                            title="Edit transaksi"
+                            aria-label="Edit transaksi"
                           >
-                            <Edit2 size={14} />
+                            <Edit2 size={13} />
                           </button>
                           <button
-                            onClick={() => handleDelete(tx.id)}
-                            className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20"
-                            title="Delete"
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDelete(tx.id)
+                            }}
+                            className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border border-rose-200/50 dark:border-rose-900/40 transition-colors"
+                            title="Hapus transaksi"
+                            aria-label="Hapus transaksi"
                           >
-                            <Trash2 size={14} />
+                            <Trash2 size={13} />
                           </button>
                         </div>
                       </div>

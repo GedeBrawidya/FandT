@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { supabase } from '@/lib/supabase'
 import type { BudgetPeriod } from '@/types/database'
-import { getMockPeriod, updateMockSavingsTarget, updateMockDailyCap } from '@/lib/mock-storage'
+import { getMockPeriod, updateMockSavingsTarget, updateMockDailyCap, isUuid } from '@/lib/mock-storage'
 
 export async function getCurrentPeriod(): Promise<(BudgetPeriod & { daily_cap?: number }) | null> {
   if (supabase) {
@@ -69,7 +69,7 @@ export async function createOrEnsurePeriod(periodStartDay: number): Promise<Budg
 
 export async function updateSavingsTarget(periodId: string, amount: number): Promise<void> {
   updateMockSavingsTarget(amount)
-  if (supabase) {
+  if (supabase && isUuid(periodId)) {
     try {
       await supabase
         .from('budget_periods')

@@ -123,13 +123,13 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
                 key={t.id}
                 type="button"
                 onClick={() => setValue('type', t.id)}
-                className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-xs font-medium transition-all ${
+                className={`flex flex-col items-center justify-center p-3 rounded-2xl border text-xs font-bold transition-all ${
                   selectedType === t.id
-                    ? 'border-emerald-400 bg-emerald-500/20 text-emerald-300'
-                    : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                    ? 'border-stone-900 bg-stone-900 text-white dark:border-white dark:bg-white dark:text-stone-900 shadow-sm'
+                    : 'border-stone-200/80 bg-stone-50 text-stone-700 hover:bg-stone-100 dark:border-white/[0.08] dark:bg-stone-800/60 dark:text-stone-300 dark:hover:bg-stone-800'
                 }`}
               >
-                <span className="text-lg mb-1">{t.icon}</span>
+                <span className="text-xl mb-1">{t.icon}</span>
                 <span>{t.label}</span>
               </button>
             ))}
@@ -142,7 +142,7 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
         {/* Initial Balance */}
         <div className="space-y-1.5">
           <Label htmlFor="initial-balance">
-            {wallet ? 'Initial Balance' : 'Initial Balance'}
+            {wallet ? 'Current Balance (Rp)' : 'Initial Balance (Rp)'}
           </Label>
           <Input
             id="initial-balance"
@@ -163,7 +163,7 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
           <Button
             type="submit"
             disabled={isSubmitting || createWalletMutation.isPending || updateWalletMutation.isPending}
-            className="bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-semibold"
+            className="lisso-btn-black font-semibold"
           >
             {wallet ? 'Save Changes' : 'Add Wallet'}
           </Button>

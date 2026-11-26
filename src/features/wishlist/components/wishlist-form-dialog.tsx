@@ -17,7 +17,15 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
   const [priority, setPriority] = useState('3')
   const [note, setNote] = useState('')
 
-  const { createItem, updateItem } = useWishlist()
+  const { createItem, updateItem, deleteItem } = useWishlist()
+
+  const handleDelete = async () => {
+    if (!initialItem) return
+    if (window.confirm(`Hapus impian "${initialItem.name}"?`)) {
+      await deleteItem.mutateAsync(initialItem.id)
+      onClose()
+    }
+  }
 
   useEffect(() => {
     if (initialItem) {
@@ -173,21 +181,33 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
             />
           </div>
 
-          <div className="pt-2 flex items-center justify-end gap-2 border-t border-stone-100 dark:border-white/[0.08]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 rounded-full text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-[#181818] transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={createItem.isPending || updateItem.isPending}
-              className="lisso-btn-black text-xs"
-            >
-              {createItem.isPending || updateItem.isPending ? 'Saving...' : 'Save Wishlist Item'}
-            </button>
+          <div className="pt-2 flex items-center justify-between gap-2 border-t border-stone-100 dark:border-white/[0.08]">
+            {initialItem ? (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleteItem.isPending}
+                className="px-3.5 py-2 rounded-full text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30 transition-colors"
+              >
+                {deleteItem.isPending ? 'Menghapus...' : 'Hapus Item'}
+              </button>
+            ) : <div />}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2.5 rounded-full text-xs font-semibold text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-[#181818] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={createItem.isPending || updateItem.isPending}
+                className="lisso-btn-black text-xs"
+              >
+                {createItem.isPending || updateItem.isPending ? 'Saving...' : 'Save Wishlist Item'}
+              </button>
+            </div>
           </div>
         </form>
       </div>

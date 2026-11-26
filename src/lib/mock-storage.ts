@@ -303,17 +303,19 @@ export function getMockDailyAllowance(date: Date = new Date()): DailyAllowance {
     .filter((t) => t.type === 'expense' && t.occurred_on === todayStr && !t.deleted_at && !t.bill_id)
     .reduce((sum, t) => sum + t.amount, 0)
 
-  const sisaHariIni = Math.max(0, jatahHarian - terpakaiHariIni)
+  const dailyCap = state.period.daily_cap > 0 ? state.period.daily_cap : jatahHarian
+  const sisaHariIni = dailyCap - terpakaiHariIni
 
   return {
     budget_variabel: budgetVariabel,
-    jatah_harian: state.period.daily_cap > 0 ? state.period.daily_cap : jatahHarian,
+    jatah_harian: dailyCap,
     terpakai_hari_ini: terpakaiHariIni,
-    sisa_hari_ini: Math.max(0, (state.period.daily_cap > 0 ? state.period.daily_cap : jatahHarian) - terpakaiHariIni),
+    sisa_hari_ini: sisaHariIni,
     total_saldo: totalSaldo,
     sisa_budget: budgetVariabel,
     sisa_hari: sisaHari,
-    is_safe: sisaHariIni > 0,
+    is_safe: sisaHariIni >= 0,
+    is_over_budget: sisaHariIni < 0,
   }
 }
 
@@ -380,14 +382,60 @@ export function archiveMockWallet(id: string): void {
   if (wallet) { wallet.is_archived = true; wallet.updated_at = new Date().toISOString(); saveAppState(state) }
 }
 
+export const isUuid = (id: string): boolean =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+
+export function getMockCategories(kind?: 'expense' | 'income' | 'task'): Category[] {
+  const state = loadAppState()
+  return state.categories.filter((c) => !c.is_archived && (!kind || c.kind === kind))
+}
+
+export function saveMockCategory(data: Partial<Category> & { name: string; kind: Category['kind']; color: string; icon: string }): Category {
+  const state = loadAppState()
+  const now = new Date().toISOString()
+  const index = state.categories.findIndex((c) => c.id === data.id)
+  if (index >= 0) {
+    state.categories[index] = { ...state.categories[index], ...data, updated_at: now }
+    saveAppState(state)
+    return state.categories[index]
+  }
+  const newCat: Category = {
+    id: `cat-${Date.now()}`,
+    user_id: '00000000-0000-0000-0000-000000000001',
+    name: data.name,
+    kind: data.kind,
+    color: data.color,
+    icon: data.icon,
+    sort_order: state.categories.length + 1,
+    is_archived: false,
+    created_at: now,
+    updated_at: now,
+  }
+  state.categories.push(newCat)
+  saveAppState(state)
+  return newCat
+}
+
+export function archiveMockCategory(id: string): void {
+  const state = loadAppState()
+  const cat = state.categories.find((c) => c.id === id)
+  if (cat) {
+    cat.is_archived = true
+    cat.updated_at = new Date().toISOString()
+    saveAppState(state)
+  }
+}
+
 // ─── Transactions ───────────────────────────────────────────
 export function getMockTransactions(): Transaction[] {
   const state = loadAppState()
-  return state.transactions.map((tx) => ({
-    ...tx,
-    category: state.categories.find((c) => c.id === tx.category_id) || null,
-    wallet: state.wallets.find((w) => w.id === tx.wallet_id) || null,
-  }))
+  return state.transactions
+    .filter((tx) => !tx.deleted_at)
+    .map((tx) => ({
+      ...tx,
+      category: state.categories.find((c) => c.id === tx.category_id) || null,
+      wallet: state.wallets.find((w) => w.id === tx.wallet_id) || null,
+    }))
 }
 
 export function addMockTransaction(tx: Omit<Transaction, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'deleted_at'>): Transaction {
@@ -413,7 +461,79 @@ export function addMockTransaction(tx: Omit<Transaction, 'id' | 'created_at' | '
 
   state.transactions.unshift(newTx)
   saveAppState(state)
-  return newTx
+  return {
+    ...newTx,
+    category: state.categories.find((c) => c.id === newTx.category_id) || null,
+    wallet: state.wallets.find((w) => w.id === newTx.wallet_id) || null,
+  }
+}
+
+export function updateMockTransaction(id: string, input: Partial<Transaction>): Transaction {
+  const state = loadAppState()
+  const now = new Date().toISOString()
+  const index = state.transactions.findIndex((t) => t.id === id)
+  if (index === -1) {
+    throw new Error('Transaksi tidak ditemukan')
+  }
+  const oldTx = state.transactions[index]
+  const updatedTx: Transaction = {
+    ...oldTx,
+    ...input,
+    updated_at: now,
+  }
+  // Adjust balance if amount or wallet changed
+  if (oldTx.wallet_id && oldTx.amount !== updatedTx.amount) {
+    const wb = state.walletBalances.find((w) => w.wallet_id === oldTx.wallet_id)
+    if (wb) {
+      if (oldTx.type === 'expense') {
+        wb.balance += oldTx.amount - updatedTx.amount
+      } else if (oldTx.type === 'income') {
+        wb.balance += updatedTx.amount - oldTx.amount
+      }
+    }
+  }
+  state.transactions[index] = updatedTx
+  saveAppState(state)
+  return {
+    ...updatedTx,
+    category: state.categories.find((c) => c.id === updatedTx.category_id) || null,
+    wallet: state.wallets.find((w) => w.id === updatedTx.wallet_id) || null,
+  }
+}
+
+export function deleteMockTransaction(id: string): void {
+  const state = loadAppState()
+  const now = new Date().toISOString()
+  const tx = state.transactions.find((t) => t.id === id)
+  if (tx) {
+    tx.deleted_at = now
+    // Revert balance on delete
+    if (tx.wallet_id) {
+      const wb = state.walletBalances.find((w) => w.wallet_id === tx.wallet_id)
+      if (wb) {
+        if (tx.type === 'expense') wb.balance += tx.amount
+        if (tx.type === 'income') wb.balance = Math.max(0, wb.balance - tx.amount)
+      }
+    }
+    saveAppState(state)
+  }
+}
+
+export function undoDeleteMockTransaction(id: string): void {
+  const state = loadAppState()
+  const tx = state.transactions.find((t) => t.id === id)
+  if (tx) {
+    tx.deleted_at = null
+    // Re-apply balance
+    if (tx.wallet_id) {
+      const wb = state.walletBalances.find((w) => w.wallet_id === tx.wallet_id)
+      if (wb) {
+        if (tx.type === 'expense') wb.balance = Math.max(0, wb.balance - tx.amount)
+        if (tx.type === 'income') wb.balance += tx.amount
+      }
+    }
+    saveAppState(state)
+  }
 }
 
 // ─── Tasks ──────────────────────────────────────────────────

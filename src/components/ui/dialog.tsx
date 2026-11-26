@@ -28,7 +28,7 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
     >
       <div
         className={cn(
-          'glass-strong relative w-full max-w-md rounded-2xl p-6 shadow-glass',
+          'relative w-full max-w-md rounded-[24px] p-6 bg-white dark:bg-[#141414] border border-stone-200/90 dark:border-white/[0.12] shadow-2xl text-stone-900 dark:text-stone-100',
           className
         )}
         role="dialog"
@@ -36,7 +36,7 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 touch-target flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-white/10 hover:text-slate-200 transition-colors"
+          className="absolute right-4 top-4 touch-target flex h-8 w-8 items-center justify-center rounded-full text-stone-400 hover:bg-stone-100 dark:hover:bg-white/10 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
           aria-label="Close"
         >
           <X size={16} />
@@ -52,11 +52,11 @@ export function DialogHeader({ children, className }: { children: ReactNode; cla
 }
 
 export function DialogTitle({ children, className }: { children: ReactNode; className?: string }) {
-  return <h2 className={cn('text-lg font-semibold text-slate-50', className)}>{children}</h2>
+  return <h2 className={cn('text-lg font-extrabold text-stone-900 dark:text-stone-100', className)}>{children}</h2>
 }
 
 export function DialogDescription({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn('mt-1 text-sm text-slate-400', className)}>{children}</p>
+  return <p className={cn('mt-1 text-xs text-stone-500 dark:text-stone-400', className)}>{children}</p>
 }
 
 export function DialogFooter({ children, className }: { children: ReactNode; className?: string }) {

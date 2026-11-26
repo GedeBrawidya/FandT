@@ -90,6 +90,12 @@ export function WishlistPage() {
   }, [displayItems, activeTab])
 
   // Set wishlist target as period savings target
+  const handleDeleteItem = async (item: WishlistItem) => {
+    if (window.confirm(`Hapus impian "${item.name}"?`)) {
+      await deleteItem.mutateAsync(item.id)
+    }
+  }
+
   const handleSetAsPeriodTarget = async (item: WishlistItem) => {
     if (!period) {
       alert('Atur periode keuangan terlebih dahulu di menu Pengaturan.')
@@ -291,8 +297,16 @@ export function WishlistPage() {
                           setFormOpen(true)
                         }}
                         className="h-8 w-8 rounded-full hover:bg-stone-100 dark:hover:bg-[#181818] flex items-center justify-center text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors"
+                        title="Edit impian"
                       >
                         <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteItem(item)}
+                        className="h-8 w-8 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                        title="Hapus impian"
+                      >
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </div>
@@ -337,9 +351,17 @@ export function WishlistPage() {
                       setEditingItem(item)
                       setFormOpen(true)
                     }}
-                    className="h-8 w-8 rounded-full hover:bg-stone-100 dark:hover:bg-[#181818] flex items-center justify-center text-stone-400 transition-colors"
+                    className="h-8 w-8 rounded-full hover:bg-stone-100 dark:hover:bg-[#181818] flex items-center justify-center text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors"
+                    title="Edit impian"
                   >
                     <Pencil size={14} />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteItem(item)}
+                    className="h-8 w-8 rounded-full hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                    title="Hapus impian"
+                  >
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>

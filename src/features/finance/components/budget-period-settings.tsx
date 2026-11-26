@@ -14,14 +14,14 @@ export function BudgetPeriodSettings() {
   const { data: period, isLoading, refetch } = useBudgetPeriod()
   const updateTargetMutation = useUpdateSavingsTarget()
 
-  const [savingsTarget, setSavingsTarget] = useState<number>(0)
+  const [savingsTarget, setSavingsTarget] = useState<string>('0')
   const [periodStartDay, setPeriodStartDay] = useState<number>(1)
   const [isSaving, setIsSaving] = useState(false)
   const [successMsg, setSuccessMsg] = useState(false)
 
   useEffect(() => {
     if (period) {
-      setSavingsTarget(period.savings_target || 0)
+      setSavingsTarget(String(period.savings_target ?? 0))
     }
   }, [period])
 
@@ -29,11 +29,12 @@ export function BudgetPeriodSettings() {
     e.preventDefault()
     setIsSaving(true)
     setSuccessMsg(false)
+    const targetNum = savingsTarget.trim() === '' ? 0 : Math.max(0, parseInt(savingsTarget, 10) || 0)
     try {
       if (period) {
         await updateTargetMutation.mutateAsync({
           periodId: period.id,
-          amount: Number(savingsTarget) || 0,
+          amount: targetNum,
         })
       } else {
         await createOrEnsurePeriod(periodStartDay)
@@ -95,7 +96,10 @@ export function BudgetPeriodSettings() {
             type="number"
             min="0"
             value={savingsTarget}
-            onChange={(e) => setSavingsTarget(Number(e.target.value))}
+            onChange={(e) => setSavingsTarget(e.target.value)}
+            onBlur={() => {
+              if (savingsTarget.trim() === '') setSavingsTarget('0')
+            }}
             placeholder="0"
             className="text-base font-semibold"
           />

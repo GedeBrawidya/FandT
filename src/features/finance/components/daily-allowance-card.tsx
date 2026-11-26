@@ -32,22 +32,20 @@ export function DailyAllowanceCard({ date = new Date(), onSetupPeriod }: Props) 
   }
 
   // Fallback defaults for demo / first-time user
-  const jatah_harian = allowance?.jatah_harian ?? 50000
-  const sisa_hari_ini = allowance?.sisa_hari_ini ?? 50000
+  const jatah_harian = allowance?.jatah_harian ?? 0
+  const sisa_hari_ini = allowance?.sisa_hari_ini ?? 0
   const terpakai_hari_ini = allowance?.terpakai_hari_ini ?? 0
-  const sisa_budget = allowance?.sisa_budget ?? 1500000
+  const sisa_budget = allowance?.sisa_budget ?? 0
   const is_over_budget = allowance?.is_over_budget ?? (sisa_hari_ini < 0)
-  const is_savings_at_risk = allowance?.is_savings_at_risk ?? (sisa_budget <= 0)
+  const is_savings_at_risk = allowance?.is_savings_at_risk ?? (sisa_budget < 0)
 
   const pctUsed = jatah_harian > 0
     ? Math.min(100, Math.round(((jatah_harian - sisa_hari_ini) / jatah_harian) * 100))
-    : 100
+    : (terpakai_hari_ini > 0 ? 100 : 0)
 
   const amountColor =
-    sisa_hari_ini > 0
+    sisa_hari_ini >= 0
       ? 'text-stone-900 dark:text-stone-100'
-      : sisa_hari_ini >= -jatah_harian * 0.2
-      ? 'text-amber-600 dark:text-amber-400'
       : 'text-rose-600 dark:text-rose-400'
 
   const barColor =
@@ -63,8 +61,8 @@ export function DailyAllowanceCard({ date = new Date(), onSetupPeriod }: Props) 
         <span className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
           Today's Daily Allowance
         </span>
-        <span className={sisa_hari_ini > 0 ? 'lisso-pill-green' : 'lisso-pill-red'}>
-          {sisa_hari_ini > 0 ? 'Safe' : 'Over Budget'}
+        <span className={sisa_hari_ini >= 0 ? 'lisso-pill-green' : 'lisso-pill-red'}>
+          {sisa_hari_ini >= 0 ? 'Safe' : 'Over Budget'}
         </span>
       </div>
 

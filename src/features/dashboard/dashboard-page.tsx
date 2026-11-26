@@ -103,7 +103,9 @@ export function DashboardPage() {
                 {budgetLeft >= 0 ? 'Safe' : 'Over budget'}
               </span>
             </div>
-            <p className="dashboard-amount">{formatRupiah(budgetLeft)}</p>
+            <p className={`dashboard-amount ${budgetLeft < 0 ? 'text-rose-600 dark:text-rose-400' : ''}`}>
+              {formatRupiah(budgetLeft)}
+            </p>
             <p className="card-copy">Spent {formatRupiah(budgetUsed)} of {formatRupiah(budgetCap)}</p>
             <div className="dashboard-meter"><i style={{ width: `${budgetProgress}%` }} /></div>
             <button onClick={() => setQuickAddOpen(true)} className="dashboard-link">

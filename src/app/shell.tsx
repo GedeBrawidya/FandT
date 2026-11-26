@@ -6,6 +6,7 @@ import { NotificationDropdown } from '@/components/notification-dropdown'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { FandtLogo } from '@/components/fandt-logo'
 import { QuickAddSheet } from '@/features/finance/components/quick-add-sheet'
+import { Toaster } from '@/components/ui/toast'
 import {
   Home,
   CheckSquare,
@@ -228,6 +229,9 @@ export function AppShell() {
 
       {/* Quick Add Sheet */}
       <QuickAddSheet open={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
+
+      {/* Global Toast System */}
+      <Toaster />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import type { Wallet, WalletBalance, WalletInsert } from '@/types/database'
-import { archiveMockWallet, getMockWallets, getMockWalletBalances, saveMockWallet } from '@/lib/mock-storage'
+import { archiveMockWallet, getMockWallets, getMockWalletBalances, saveMockWallet, isUuid } from '@/lib/mock-storage'
 
 export async function getWallets(): Promise<Wallet[]> {
   if (supabase) {
@@ -40,42 +40,54 @@ export async function getWalletBalances(): Promise<WalletBalance[]> {
 }
 
 export async function createWallet(input: Omit<WalletInsert, 'user_id'>): Promise<Wallet> {
-  if (!supabase) return saveMockWallet(input as any)
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Not authenticated')
-  const { data, error } = await supabase
-    .from('wallets')
-    .insert({ ...input, user_id: user.id })
-    .select()
-    .single()
-  if (error) throw error
-  return data
+  if (supabase) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && user.app_metadata?.provider !== 'demo') {
+        const { data, error } = await supabase
+          .from('wallets')
+          .insert({ ...input, user_id: user.id })
+          .select()
+          .single()
+        if (!error && data) return data
+      }
+    } catch {
+      // fallback
+    }
+  }
+  return saveMockWallet(input as any)
 }
 
 export async function updateWallet(id: string, input: Partial<Omit<WalletInsert, 'user_id'>>): Promise<Wallet> {
-  if (!supabase) {
-    const current = getMockWallets().find((wallet) => wallet.id === id)
-    if (!current) throw new Error('Dompet tidak ditemukan')
-    return saveMockWallet({ ...current, ...input })
+  if (supabase && isUuid(id)) {
+    try {
+      const { data, error } = await supabase
+        .from('wallets')
+        .update({ ...input, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single()
+      if (!error && data) return data
+    } catch {
+      // fallback
+    }
   }
-  const { data, error } = await supabase
-    .from('wallets')
-    .update({ ...input, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select()
-    .single()
-  if (error) throw error
-  return data
+  const current = getMockWallets().find((wallet) => wallet.id === id)
+  if (!current) throw new Error('Dompet tidak ditemukan')
+  return saveMockWallet({ ...current, ...input })
 }
 
 export async function archiveWallet(id: string): Promise<void> {
-  if (!supabase) {
-    archiveMockWallet(id)
-    return
+  if (supabase && isUuid(id)) {
+    try {
+      const { error } = await supabase
+        .from('wallets')
+        .update({ is_archived: true, updated_at: new Date().toISOString() })
+        .eq('id', id)
+      if (!error) return
+    } catch {
+      // fallback
+    }
   }
-  const { error } = await supabase
-    .from('wallets')
-    .update({ is_archived: true, updated_at: new Date().toISOString() })
-    .eq('id', id)
-  if (error) throw error
+  archiveMockWallet(id)
 }

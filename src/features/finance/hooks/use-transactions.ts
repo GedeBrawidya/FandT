@@ -9,6 +9,7 @@ import {
   type TransactionFilters,
 } from '@/features/finance/api/transactions'
 import type { TransactionInsert } from '@/types/database'
+import { toast } from '@/components/ui/use-toast'
 
 export function useTransactions(filters: TransactionFilters = {}) {
   return useQuery({
@@ -29,7 +30,6 @@ export function useCreateTransaction() {
   return useMutation({
     mutationFn: (data: Omit<TransactionInsert, 'user_id'>) => createTransaction(data),
     onMutate: async () => {
-      // Optimistic: cancel outgoing refetches so they don't overwrite
       await qc.cancelQueries({ queryKey: ['daily-allowance'] })
       await qc.cancelQueries({ queryKey: ['transactions', 'today'] })
     },
@@ -37,11 +37,20 @@ export function useCreateTransaction() {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
+      toast({
+        title: 'Transaksi berhasil dicatat',
+        description: 'Pengeluaran/pemasukan telah masuk ke histori.',
+        variant: 'success',
+      })
     },
-    onError: () => {
-      // On error, refetch to ensure consistency
+    onError: (err: any) => {
       qc.invalidateQueries({ queryKey: ['transactions', 'today'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
+      toast({
+        title: 'Gagal mencatat transaksi',
+        description: err?.message || 'Terjadi kesalahan saat menyimpan transaksi.',
+        variant: 'destructive',
+      })
     },
   })
 }
@@ -54,6 +63,18 @@ export function useSoftDeleteTransaction() {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
+      toast({
+        title: 'Transaksi dihapus',
+        description: 'Transaksi telah dipindahkan ke sampah.',
+        variant: 'default',
+      })
+    },
+    onError: (err: any) => {
+      toast({
+        title: 'Gagal menghapus transaksi',
+        description: err?.message || 'Terjadi kendala.',
+        variant: 'destructive',
+      })
     },
   })
 }
@@ -66,6 +87,11 @@ export function useUndoDeleteTransaction() {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
+      toast({
+        title: 'Transaksi dipulihkan',
+        description: 'Catatan transaksi telah dikembalikan.',
+        variant: 'success',
+      })
     },
   })
 }
@@ -79,6 +105,18 @@ export function useUpdateTransaction() {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['daily-allowance'] })
       qc.invalidateQueries({ queryKey: ['wallet-balances'] })
+      toast({
+        title: 'Transaksi berhasil diperbarui',
+        description: 'Perubahan nominal dan rincian transaksi telah disimpan.',
+        variant: 'success',
+      })
+    },
+    onError: (err: any) => {
+      toast({
+        title: 'Gagal memperbarui transaksi',
+        description: err?.message || 'Terjadi kesalahan.',
+        variant: 'destructive',
+      })
     },
   })
 }

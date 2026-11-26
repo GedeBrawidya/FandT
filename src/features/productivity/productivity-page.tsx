@@ -123,13 +123,11 @@ export function ProductivityPage() {
   // Save updated daily target & savings target (Syncs immediately with Dashboard & Finance)
   const handleSaveBudgetTargets = async (e: React.FormEvent) => {
     e.preventDefault()
-    const newCap = parseInt(dailyCapInput, 10)
-    const newSavings = parseInt(savingsTargetInput, 10)
+    const newCap = dailyCapInput.trim() === '' ? 0 : Math.max(0, parseInt(dailyCapInput, 10) || 0)
+    const newSavings = savingsTargetInput.trim() === '' ? 0 : Math.max(0, parseInt(savingsTargetInput, 10) || 0)
 
-    if (!isNaN(newCap) && newCap > 0) {
-      await updateDailyCap.mutateAsync(newCap)
-    }
-    if (period && !isNaN(newSavings) && newSavings >= 0) {
+    await updateDailyCap.mutateAsync(newCap)
+    if (period) {
       await updateSavings.mutateAsync({ periodId: period.id, amount: newSavings })
     }
 
@@ -141,8 +139,8 @@ export function ProductivityPage() {
   }
 
   const handleOpenEditTargets = () => {
-    setDailyCapInput(String(jatahHarian))
-    setSavingsTargetInput(String(currentSavingsTarget))
+    setDailyCapInput(String(allowance?.jatah_harian ?? 0))
+    setSavingsTargetInput(String(period?.savings_target ?? 0))
     setIsEditingTarget(true)
   }
 
@@ -278,8 +276,10 @@ export function ProductivityPage() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={dailyCapInput}
                   onChange={(e) => setDailyCapInput(e.target.value)}
+                  onBlur={() => { if (dailyCapInput.trim() === '') setDailyCapInput('0') }}
                   className="w-full text-xs font-bold h-9 px-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
                 />
               </div>
@@ -289,8 +289,10 @@ export function ProductivityPage() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={savingsTargetInput}
                   onChange={(e) => setSavingsTargetInput(e.target.value)}
+                  onBlur={() => { if (savingsTargetInput.trim() === '') setSavingsTargetInput('0') }}
                   className="w-full text-xs font-bold h-9 px-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 border border-stone-200/80 dark:border-white/[0.08] focus:outline-none"
                 />
               </div>
