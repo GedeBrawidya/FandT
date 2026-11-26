@@ -35,11 +35,11 @@
 @layer components {
   /* Lisso Clean UI components */
   .lisso-card {
-    @apply bg-white dark:bg-[#141414] rounded-[24px] shadow-lisso border border-stone-200/60 dark:border-white/[0.10] transition-colors duration-300;
+    @apply bg-white dark:bg-[#141414] rounded-[24px] shadow-[0_10px_30px_-5px_rgba(30,22,12,0.08),0_4px_12px_-2px_rgba(30,22,12,0.04)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5)] border border-stone-200/90 dark:border-white/[0.12] transition-all duration-300;
   }
 
   .lisso-card-interactive {
-    @apply lisso-card hover:bg-[#F3EEE6] dark:hover:bg-[#1c1c1c];
+    @apply lisso-card hover:bg-[#F3EEE6] dark:hover:bg-[#1c1c1c] hover:shadow-[0_16px_36px_-6px_rgba(30,22,12,0.12)] hover:-translate-y-0.5;
   }
 
   /* Pill Badges */
@@ -97,8 +97,12 @@
   .dashboard-left-rail { @apply grid-rows-3; }
   .dashboard-middle-rail { @apply grid-rows-[auto_1fr_1fr]; }
   .dashboard-right-rail { @apply grid-rows-2; }
-  .dashboard-card { @apply min-h-0 overflow-hidden rounded-[20px] xl:rounded-[22px] border-0 bg-white/95 px-3.5 py-3 xl:px-4 xl:py-3.5 shadow-[0_12px_28px_rgba(93,72,52,0.06)] dark:border-white/[0.08] dark:bg-[#141414] transition-colors duration-200; }
-  .dashboard-card:hover { @apply bg-[#F6F0E7] dark:bg-[#1c1c1c]; }
+  .dashboard-card {
+    @apply min-h-0 overflow-hidden rounded-[22px] xl:rounded-[24px] border border-stone-200/90 dark:border-white/[0.12] bg-white dark:bg-[#141414] px-4 py-3.5 xl:px-5 xl:py-4 shadow-[0_8px_24px_-4px_rgba(35,25,15,0.08),0_2px_8px_-1px_rgba(35,25,15,0.05)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-200;
+  }
+  .dashboard-card:hover {
+    @apply shadow-[0_14px_34px_-4px_rgba(35,25,15,0.12)] dark:shadow-[0_14px_40px_rgba(0,0,0,0.6)] border-stone-300 dark:border-white/[0.18];
+  }
   .dashboard-card h2 { @apply mt-1.5 xl:mt-2 truncate text-xs xl:text-sm font-extrabold text-stone-900 dark:text-stone-100; }
   .card-kicker { @apply flex items-center justify-between gap-2 text-[10px] font-bold uppercase tracking-[0.11em] text-stone-500; }
   .card-kicker > button { @apply normal-case tracking-normal text-[10.5px] font-bold text-stone-700 rounded-lg px-2 py-0.5 -mr-1 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:text-stone-200 dark:hover:bg-stone-800; }
@@ -115,7 +119,7 @@
   .wallet-list-mini b { @apply font-semibold text-stone-700 dark:text-stone-200; }
   .progress-copy { @apply mt-1 text-[10px] xl:text-[10.5px] font-semibold text-[#3F6244] dark:text-[#B5D8B8]; }
   .dashboard-list { @apply mt-1.5 xl:mt-2 grid gap-1; }
-  .task-row { @apply grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-1.5 dark:border-white/[0.06] dark:bg-[#181818] transition-colors; }
+  .task-row { @apply grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-xl border border-stone-200/80 bg-[#fffcf9] px-2.5 py-1.5 dark:border-white/[0.08] dark:bg-[#181818] shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-colors; }
   .task-row > button:first-child { @apply text-stone-400 hover:text-[#59715A]; }
   .task-title { @apply min-w-0 text-left; }
   .task-title b, .bill-row b { @apply block truncate text-[10.5px] font-bold text-stone-800 dark:text-stone-100; }
@@ -124,7 +128,7 @@
   .priority-high { @apply bg-[#F7E4DD] text-[#9D4530]; }
   .priority-med { @apply bg-[#F4E8C9] text-[#87651C]; }
   .priority-low { @apply bg-[#E7F0E7] text-[#3F6244]; }
-  .bill-row { @apply flex w-full items-center justify-between gap-3 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-1.5 text-left hover:bg-[#fff5dd] dark:border-white/[0.06] dark:bg-[#181818] dark:hover:bg-[#202020] transition-colors; }
+  .bill-row { @apply flex w-full items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffcf9] px-2.5 py-1.5 text-left hover:bg-[#fff5dd] dark:border-white/[0.08] dark:bg-[#181818] dark:hover:bg-[#202020] shadow-[0_1px_3px_rgba(0,0,0,0.03)] transition-colors; }
   .bill-row > span { @apply min-w-0; }
   .bill-row strong { @apply shrink-0 text-[10.5px] font-extrabold text-stone-800 dark:text-stone-100; }
   .note-preview { @apply mt-2 xl:mt-2.5 flex w-full gap-2.5 text-left; }
@@ -136,11 +140,13 @@
   .dashboard-column-title { @apply flex items-center justify-between px-1 text-xs font-extrabold text-stone-800 dark:text-stone-100; }
   .dashboard-column-title > button { @apply inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-bold text-stone-500 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:hover:bg-stone-800 dark:hover:text-stone-100; }
   .dashboard-shortcuts { @apply flex flex-col justify-between; }
-  .shortcut-tile { @apply flex items-center gap-2 xl:gap-2.5 p-1.5 xl:p-2 rounded-xl bg-stone-50/90 dark:bg-[#181818] hover:bg-[#F3ECE1] dark:hover:bg-[#202020] border-0 transition-colors text-left cursor-pointer; }
-  .shortcut-icon { @apply flex h-7 w-7 xl:h-8 xl:w-8 shrink-0 items-center justify-center rounded-lg; }
+  .shortcut-tile {
+    @apply flex items-center justify-between gap-3 p-2.5 xl:p-3 rounded-2xl bg-[#FAF7F2] dark:bg-[#1a1a1e] hover:bg-white dark:hover:bg-[#222228] border border-stone-200/90 dark:border-white/[0.09] shadow-[0_2px_5px_rgba(0,0,0,0.03)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.07)] hover:border-stone-300 dark:hover:border-stone-600 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all text-left cursor-pointer;
+  }
+  .shortcut-icon { @apply flex h-8 w-8 xl:h-9 xl:w-9 shrink-0 items-center justify-center rounded-xl shadow-xs; }
   .shortcut-text { @apply flex flex-col min-w-0; }
-  .shortcut-title { @apply truncate text-[11px] xl:text-xs font-bold text-stone-900 dark:text-stone-100; }
-  .shortcut-sub { @apply truncate text-[9.5px] xl:text-[10px] text-stone-500 dark:text-stone-400; }
+  .shortcut-title { @apply truncate text-[11.5px] xl:text-[12.5px] font-extrabold text-stone-900 dark:text-stone-100; }
+  .shortcut-sub { @apply truncate text-[10px] text-stone-500 dark:text-stone-400 font-medium; }
 
   @media (max-width: 1279px) {
     .dashboard-screen { @apply h-auto overflow-visible; }

@@ -23,6 +23,7 @@ import {
   Calendar,
   Target,
   StickyNote,
+  ChevronRight,
 } from 'lucide-react'
 
 const priorityLabel = { high: 'High', med: 'Medium', low: 'Low' } as const
@@ -234,71 +235,83 @@ export function DashboardPage() {
             )}
           </article>
 
-          {/* Quick Shortcuts Card (Replacing Daily focus) */}
+          {/* Quick Shortcuts Card (Tumpuk 4 urut atas ke bawah, card tebal & timbul) */}
           <article className="dashboard-card dashboard-shortcuts">
             <div className="card-kicker">
               <span>Quick shortcuts</span>
-              <span className="text-[10px] text-stone-400">Actions</span>
+              <span className="text-[10px] font-semibold text-stone-400">Actions</span>
             </div>
-            <div className="grid grid-cols-2 gap-2 mt-2 xl:mt-2.5">
+            <div className="flex-1 flex flex-col justify-between gap-2 xl:gap-2.5 mt-2.5">
               <button
                 type="button"
                 onClick={() => setTaskDialogOpen(true)}
-                className="shortcut-tile"
+                className="shortcut-tile group"
                 title="Create to-do task"
               >
-                <div className="shortcut-icon bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
-                  <CheckSquare size={15} />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="shortcut-icon bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+                    <CheckSquare size={16} />
+                  </div>
+                  <div className="shortcut-text">
+                    <span className="shortcut-title">To-Do</span>
+                    <span className="shortcut-sub">Add task</span>
+                  </div>
                 </div>
-                <div className="shortcut-text">
-                  <span className="shortcut-title">To-Do</span>
-                  <span className="shortcut-sub">Add task</span>
-                </div>
+                <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setEventModalOpen(true)}
-                className="shortcut-tile"
+                className="shortcut-tile group"
                 title="Add calendar event"
               >
-                <div className="shortcut-icon bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
-                  <Calendar size={15} />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="shortcut-icon bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+                    <Calendar size={16} />
+                  </div>
+                  <div className="shortcut-text">
+                    <span className="shortcut-title">Calendar</span>
+                    <span className="shortcut-sub">Add note</span>
+                  </div>
                 </div>
-                <div className="shortcut-text">
-                  <span className="shortcut-title">Calendar</span>
-                  <span className="shortcut-sub">Add note</span>
-                </div>
+                <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setWishlistDialogOpen(true)}
-                className="shortcut-tile"
+                className="shortcut-tile group"
                 title="Add saving target"
               >
-                <div className="shortcut-icon bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
-                  <Target size={15} />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="shortcut-icon bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+                    <Target size={16} />
+                  </div>
+                  <div className="shortcut-text">
+                    <span className="shortcut-title">Savings</span>
+                    <span className="shortcut-sub">Add target</span>
+                  </div>
                 </div>
-                <div className="shortcut-text">
-                  <span className="shortcut-title">Savings</span>
-                  <span className="shortcut-sub">Add target</span>
-                </div>
+                <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setNoteModalOpen(true)}
-                className="shortcut-tile"
+                className="shortcut-tile group"
                 title="Add note memo"
               >
-                <div className="shortcut-icon bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
-                  <StickyNote size={15} />
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="shortcut-icon bg-purple-500/15 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+                    <StickyNote size={16} />
+                  </div>
+                  <div className="shortcut-text">
+                    <span className="shortcut-title">Noted</span>
+                    <span className="shortcut-sub">Add memo</span>
+                  </div>
                 </div>
-                <div className="shortcut-text">
-                  <span className="shortcut-title">Noted</span>
-                  <span className="shortcut-sub">Add memo</span>
-                </div>
+                <ChevronRight size={14} className="text-stone-400 shrink-0 group-hover:translate-x-0.5 group-hover:text-stone-700 dark:group-hover:text-stone-200 transition-all" />
               </button>
             </div>
           </article>
