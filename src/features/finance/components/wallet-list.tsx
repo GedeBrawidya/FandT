@@ -15,10 +15,11 @@ export function WalletList() {
   const archiveMutation = useArchiveWallet()
 
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [editingWallet, setEditingWallet] = useState<Wallet | null>(null)
+  const [editingWallet, setEditingWallet] = useState<(Wallet & { balance?: number }) | null>(null)
 
   const handleEdit = (wallet: Wallet) => {
-    setEditingWallet(wallet)
+    const currentBalance = balanceMap.get(wallet.id) ?? wallet.initial_balance ?? 0
+    setEditingWallet({ ...wallet, balance: currentBalance })
     setIsFormOpen(true)
   }
 
@@ -28,7 +29,7 @@ export function WalletList() {
   }
 
   const handleArchive = async (id: string, name: string) => {
-    if (confirm(`Archive wallet "${name}"? It will no longer appear in the active list.`)) {
+    if (window.confirm(`Arsipkan dompet "${name}"? Dompet tidak akan muncul lagi di daftar aktif.`)) {
       await archiveMutation.mutateAsync(id)
     }
   }

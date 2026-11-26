@@ -53,6 +53,7 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
     if (!name.trim() || isNaN(priceNum) || priceNum <= 0) return
 
     if (initialItem) {
+      if (!window.confirm(`Simpan perubahan target impian "${name.trim()}"?`)) return
       await updateItem.mutateAsync({
         id: initialItem.id,
         data: {

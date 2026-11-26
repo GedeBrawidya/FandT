@@ -177,7 +177,7 @@ export function TaskDetailPage() {
             </button>
             <button
               onClick={() => {
-                if (confirm('Delete this task?')) {
+                if (window.confirm(`Hapus tugas "${displayTask.title}"?`)) {
                   deleteTask.mutate(displayTask.id)
                   navigate('/tasks')
                 }

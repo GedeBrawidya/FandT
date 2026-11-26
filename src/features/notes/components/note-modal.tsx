@@ -52,6 +52,7 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
 
   const handleSave = async () => {
     if (!title.trim()) return
+    if (note && !window.confirm(`Simpan perubahan catatan "${title.trim()}"?`)) return
     setSaving(true)
     try {
       await onSave({
@@ -70,7 +71,7 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
 
   const handleDelete = async () => {
     if (!note?.id || !onDelete) return
-    if (confirm('Delete this note?')) {
+    if (window.confirm(`Hapus catatan "${title || 'ini'}"?`)) {
       await onDelete(note.id)
       onClose()
     }

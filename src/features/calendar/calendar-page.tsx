@@ -83,6 +83,7 @@ export function CalendarPage() {
 
   const handleDeleteItem = async (it: UnifiedCalendarItem) => {
     if (it.type === 'event' && it.rawItem?.id) {
+      if (!window.confirm(`Hapus agenda "${it.title}"?`)) return
       await deleteEvent.mutateAsync(it.rawItem.id)
       setSelectedItemForDetail(null)
     }

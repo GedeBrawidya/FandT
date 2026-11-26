@@ -81,6 +81,7 @@ export function TaskFormDialog({ open, onClose, initialTask, initialStatus }: Ta
     }
 
     if (initialTask) {
+      if (!window.confirm(`Simpan perubahan tugas "${title.trim()}"?`)) return
       await updateTask.mutateAsync({
         id: initialTask.id,
         data: {

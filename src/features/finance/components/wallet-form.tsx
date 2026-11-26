@@ -22,7 +22,7 @@ type WalletFormData = z.infer<typeof walletSchema>
 interface WalletFormProps {
   open: boolean
   onClose: () => void
-  wallet?: Wallet | null
+  wallet?: (Wallet & { balance?: number }) | null
 }
 
 export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
@@ -52,7 +52,7 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
       reset({
         name: wallet.name,
         type: wallet.type,
-        initial_balance: wallet.initial_balance,
+        initial_balance: wallet.balance ?? wallet.initial_balance ?? 0,
       })
     } else {
       reset({
@@ -66,19 +66,20 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
   const onSubmit = async (values: WalletFormData) => {
     try {
       if (wallet) {
+        if (!window.confirm(`Simpan perubahan pada dompet "${values.name}"?`)) return
         await updateWalletMutation.mutateAsync({
           id: wallet.id,
           data: {
             name: values.name,
             type: values.type,
-            initial_balance: values.initial_balance,
+            initial_balance: Number(values.initial_balance) || 0,
           },
         })
       } else {
         await createWalletMutation.mutateAsync({
           name: values.name,
           type: values.type,
-          initial_balance: values.initial_balance,
+          initial_balance: Number(values.initial_balance) || 0,
           is_archived: false,
         })
       }

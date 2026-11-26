@@ -59,6 +59,7 @@ export function CategoryList() {
     if (!name.trim()) return
 
     if (editingCategory) {
+      if (!window.confirm(`Simpan perubahan kategori "${name.trim()}"?`)) return
       await updateMutation.mutateAsync({
         id: editingCategory.id,
         data: { name: name.trim(), color, icon },
@@ -77,7 +78,7 @@ export function CategoryList() {
   }
 
   const handleArchive = async (c: Category) => {
-    if (confirm(`Archive category "${c.name}"?`)) {
+    if (window.confirm(`Arsipkan kategori "${c.name}"?`)) {
       await archiveMutation.mutateAsync(c.id)
     }
   }

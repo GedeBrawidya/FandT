@@ -361,17 +361,21 @@ export function saveMockWallet(data: Partial<Wallet> & { name: string; type: Wal
   const state = loadAppState()
   const now = new Date().toISOString()
   const index = state.wallets.findIndex((wallet) => wallet.id === data.id)
+  const targetBalance = Number(data.initial_balance) || 0
   if (index >= 0) {
     const previous = state.wallets[index]
-    state.wallets[index] = { ...previous, ...data, updated_at: now }
+    state.wallets[index] = { ...previous, ...data, initial_balance: targetBalance, updated_at: now }
     const balance = state.walletBalances.find((item) => item.wallet_id === previous.id)
-    if (balance) balance.balance += data.initial_balance - previous.initial_balance
+    if (balance) {
+      balance.balance = targetBalance
+      balance.wallet_name = data.name || previous.name
+    }
     saveAppState(state)
     return state.wallets[index]
   }
-  const wallet: Wallet = { id: `wallet-${Date.now()}`, user_id: '00000000-0000-0000-0000-000000000001', name: data.name, type: data.type, initial_balance: data.initial_balance, is_archived: data.is_archived ?? false, created_at: now, updated_at: now }
+  const wallet: Wallet = { id: `wallet-${Date.now()}`, user_id: '00000000-0000-0000-0000-000000000001', name: data.name, type: data.type, initial_balance: targetBalance, is_archived: data.is_archived ?? false, created_at: now, updated_at: now }
   state.wallets.push(wallet)
-  state.walletBalances.push({ wallet_id: wallet.id, wallet_name: wallet.name, balance: wallet.initial_balance })
+  state.walletBalances.push({ wallet_id: wallet.id, wallet_name: wallet.name, balance: targetBalance })
   saveAppState(state)
   return wallet
 }

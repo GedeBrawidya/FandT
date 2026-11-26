@@ -31,6 +31,7 @@ export function TransactionList() {
   const undoDeleteMutation = useUndoDeleteTransaction()
 
   const handleDelete = async (id: string) => {
+    if (!window.confirm('Hapus transaksi ini? Transaksi akan dipindahkan ke tempat sampah.')) return
     await softDeleteMutation.mutateAsync(id)
     setLastDeletedId(id)
 

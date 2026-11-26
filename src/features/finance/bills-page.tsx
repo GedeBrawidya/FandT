@@ -206,7 +206,7 @@ export function BillsPage() {
 
                     <button
                       onClick={async () => {
-                        if (confirm(`Delete bill ${bill.name}?`)) {
+                        if (window.confirm(`Hapus tagihan "${bill.name}"?`)) {
                           await deleteBill.mutateAsync(bill.id)
                         }
                       }}

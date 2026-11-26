@@ -46,6 +46,7 @@ export function BillFormModal({ open, onClose, initialData }: BillFormModalProps
     if (!name || isNaN(numAmount) || numAmount <= 0) return
 
     if (initialData) {
+      if (!window.confirm(`Simpan perubahan tagihan "${name.trim()}"?`)) return
       await updateBill.mutateAsync({
         id: initialData.id,
         data: {

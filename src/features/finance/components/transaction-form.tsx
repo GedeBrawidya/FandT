@@ -94,6 +94,7 @@ export function TransactionForm({ open, onClose, transaction }: TransactionFormP
   const onSubmit = async (values: TransactionFormData) => {
     try {
       if (transaction) {
+        if (!window.confirm('Simpan perubahan transaksi ini?')) return
         await updateTx.mutateAsync({
           id: transaction.id,
           data: {

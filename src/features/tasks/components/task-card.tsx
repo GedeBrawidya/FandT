@@ -137,7 +137,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
           <button
             onClick={(e) => {
               e.stopPropagation()
-              if (confirm('Delete this task?')) {
+              if (window.confirm(`Hapus tugas "${task.title}"?`)) {
                 deleteTask.mutate(task.id)
               }
             }}
