@@ -104,8 +104,8 @@
   .dashboard-actions { @apply flex items-center gap-2; }
   .dashboard-period { @apply hidden sm:block rounded-full border border-stone-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-stone-600 hover:border-stone-400 dark:border-white/[0.08] dark:bg-[#141414] dark:text-stone-300; }
   .dashboard-add { @apply px-3 py-1.5 text-[11px]; }
-  .dashboard-grid { @apply relative z-10 grid flex-1 min-h-0 grid-cols-1 gap-2 xl:gap-2.5 xl:grid-cols-[.82fr_1.16fr_.82fr]; }
-  .dashboard-rail, .dashboard-middle-rail { @apply grid min-h-0 gap-2 xl:gap-2.5; }
+  .dashboard-grid { @apply relative z-10 grid flex-1 min-h-0 grid-cols-1 gap-2 lg:gap-2.5 lg:grid-cols-[.82fr_1.16fr_.82fr]; }
+  .dashboard-rail, .dashboard-middle-rail { @apply grid min-h-0 gap-2 lg:gap-2.5; }
   .dashboard-left-rail { @apply grid-rows-3; }
   .dashboard-middle-rail { @apply grid-rows-[auto_1fr_1fr]; }
   .dashboard-right-rail { @apply grid-rows-[1.1fr_auto]; }
@@ -160,7 +160,7 @@
   .shortcut-title { @apply truncate text-[11.5px] xl:text-[12.5px] font-extrabold text-stone-900 dark:text-stone-100; }
   .shortcut-sub { @apply truncate text-[10px] text-stone-500 dark:text-stone-400 font-medium; }
 
-  @media (max-width: 1279px) {
+  @media (max-width: 1023px) {
     .dashboard-screen { @apply h-auto overflow-visible; }
     .dashboard-grid { @apply grid-cols-1 md:grid-cols-2; }
     .dashboard-left-rail, .dashboard-middle-rail, .dashboard-right-rail { @apply grid-rows-none; }
@@ -182,5 +182,5 @@
   .finance-screen .bg-slate-900\/90 { background-color: rgba(38,35,31,.96) !important; }
   .dashboard-link:hover, .card-kicker > button:hover, .dashboard-column-title > button:hover { background-color: #e9ddcf !important; color: #3b332b !important; }
   .dashboard-screen { min-height: 0; }
-  @media (min-width: 1280px) { .dashboard-screen { height: calc(100dvh - 76px); max-height: calc(100dvh - 76px); overflow: hidden; } }
+  @media (min-width: 1024px) { .dashboard-screen { height: calc(100dvh - 76px); max-height: calc(100dvh - 76px); overflow: hidden; } }
 }

@@ -11,6 +11,7 @@ import { useCategories } from '@/features/finance/hooks/use-categories'
 import { TransactionForm } from '@/features/finance/components/transaction-form'
 import { formatRupiah, formatDate } from '@/lib/format'
 import type { Transaction } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { Trash2, Edit2, RotateCcw, ArrowUpRight, ArrowDownLeft, ArrowLeftRight, Receipt } from 'lucide-react'
 
 export function TransactionList() {
@@ -31,7 +32,14 @@ export function TransactionList() {
   const undoDeleteMutation = useUndoDeleteTransaction()
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Hapus transaksi ini? Transaksi akan dipindahkan ke tempat sampah.')) return
+    const ok = await confirmDialog({
+      title: 'Hapus Transaksi',
+      description: 'Hapus catatan transaksi ini? Transaksi akan dipindahkan ke tempat sampah.',
+      confirmText: 'Hapus Transaksi',
+      cancelText: 'Batal',
+      variant: 'destructive',
+    })
+    if (!ok) return
     await softDeleteMutation.mutateAsync(id)
     setLastDeletedId(id)
 

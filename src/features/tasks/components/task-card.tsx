@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { format, isPast, isToday, isTomorrow } from 'date-fns'
 import type { Task } from '@/types/database'
 import { useToggleTaskStatus, useDeleteTask } from '@/features/tasks/hooks/use-tasks'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { CheckCircle2, Circle, Clock, CheckSquare, Trash2, Calendar } from 'lucide-react'
 
 interface TaskCardProps {
@@ -135,9 +136,16 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
 
           {/* Delete Action (on hover) */}
           <button
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation()
-              if (window.confirm(`Hapus tugas "${task.title}"?`)) {
+              const ok = await confirmDialog({
+                title: 'Hapus Tugas',
+                description: `Hapus tugas "${task.title}"?`,
+                confirmText: 'Hapus',
+                cancelText: 'Batal',
+                variant: 'destructive',
+              })
+              if (ok) {
                 deleteTask.mutate(task.id)
               }
             }}

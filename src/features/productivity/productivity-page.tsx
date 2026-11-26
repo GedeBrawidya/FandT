@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useBudgetPeriod, useDailyAllowance, useUpdateSavingsTarget, useUpdateDailyCap } from '@/features/finance/hooks/use-allowance'
 import { useWalletBalances } from '@/features/finance/hooks/use-wallets'
 import { useWishlist } from '@/features/wishlist/hooks/use-wishlist'
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react'
 
 export function ProductivityPage() {
+  const navigate = useNavigate()
   // Financial hooks
   const { data: allowance } = useDailyAllowance()
   const { data: period } = useBudgetPeriod()
@@ -57,32 +59,17 @@ export function ProductivityPage() {
   const currentSavingsTarget = period?.savings_target ?? 500000
 
   // Active Wishlist Item
-  const activeWishlist: WishlistItem = useMemo(() => {
+  const activeWishlist: WishlistItem | null = useMemo(() => {
     if (selectedWishlistId) {
-      const found = wishlistItems.find((w) => w.id === selectedWishlistId)
+      const found = wishlistItems.find((w) => w.id === selectedWishlistId && w.status !== 'tercapai')
       if (found) return found
     }
-    return (
-      wishlistItems[0] ?? {
-        id: 'wish-sample',
-        user_id: '',
-        name: 'MacBook Pro M4 14" Space Black',
-        target_price: 28999000,
-        image_path: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
-        url: null,
-        priority: 5,
-        status: 'menabung',
-        note: 'Safety Rule: Boleh dibeli saat tabungan > 5x harga barang',
-        achieved_at: null,
-        created_at: '',
-        updated_at: '',
-      }
-    )
+    return wishlistItems.find((w) => w.status !== 'tercapai') ?? null
   }, [wishlistItems, selectedWishlistId])
 
   // Rule of 5x Calculation:
   // Wishlist item is only safely achievable when totalSavings >= 5x target_price!
-  const targetPrice = activeWishlist.target_price || 1
+  const targetPrice = activeWishlist?.target_price || 1
   const safeBenchmark5x = targetPrice * 5
   const progress5xPercent = Math.min(100, Math.round((totalSavings / safeBenchmark5x) * 100))
   const isSafeToBuy = totalSavings >= safeBenchmark5x
@@ -169,68 +156,87 @@ export function ProductivityPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400">
               Wishlist &amp; 5x Savings Rule
             </span>
-            <span
-              className={
-                isSafeToBuy
-                  ? 'lisso-pill-green'
-                  : 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400'
-              }
-            >
-              {isSafeToBuy ? 'Safe to Buy (>5x)' : 'Target 5x Savings'}
-            </span>
+            {activeWishlist && (
+              <span
+                className={
+                  isSafeToBuy
+                    ? 'lisso-pill-green'
+                    : 'px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400'
+                }
+              >
+                {isSafeToBuy ? 'Safe to Buy (>5x)' : 'Target 5x Savings'}
+              </span>
+            )}
           </div>
 
-          <div>
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="text-base font-extrabold text-stone-900 dark:text-stone-100 truncate">
-                {activeWishlist.name}
-              </h3>
-              {wishlistItems.length > 1 && (
-                <select
-                  value={selectedWishlistId || activeWishlist.id}
-                  onChange={(e) => setSelectedWishlistId(e.target.value)}
-                  className="text-[11px] font-semibold bg-stone-100 dark:bg-stone-800 rounded-lg px-2 py-1 text-stone-600 dark:text-stone-300 border-none focus:outline-none"
-                >
-                  {wishlistItems.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
+          {activeWishlist ? (
+            <>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-base font-extrabold text-stone-900 dark:text-stone-100 truncate">
+                    {activeWishlist.name}
+                  </h3>
+                  {wishlistItems.length > 1 && (
+                    <select
+                      value={selectedWishlistId || activeWishlist.id}
+                      onChange={(e) => setSelectedWishlistId(e.target.value)}
+                      className="text-[11px] font-semibold bg-stone-100 dark:bg-stone-800 rounded-lg px-2 py-1 text-stone-600 dark:text-stone-300 border-none focus:outline-none"
+                    >
+                      {wishlistItems.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
 
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-              Item Price: <span className="font-bold text-stone-800 dark:text-stone-200">{formatRupiah(targetPrice)}</span>
-            </p>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                  Item Price: <span className="font-bold text-stone-800 dark:text-stone-200">{formatRupiah(targetPrice)}</span>
+                </p>
 
-            <div className="mt-3 p-3 rounded-2xl bg-stone-100/70 dark:bg-stone-800/50 space-y-1 text-xs">
-              <div className="flex items-center justify-between font-semibold">
-                <span className="text-stone-500">Current Savings Balance:</span>
-                <span className="font-bold text-stone-900 dark:text-stone-100">{formatRupiah(totalSavings)}</span>
+                <div className="mt-3 p-3 rounded-2xl bg-stone-100/70 dark:bg-stone-800/50 space-y-1 text-xs">
+                  <div className="flex items-center justify-between font-semibold">
+                    <span className="text-stone-500">Current Savings Balance:</span>
+                    <span className="font-bold text-stone-900 dark:text-stone-100">{formatRupiah(totalSavings)}</span>
+                  </div>
+                  <div className="flex items-center justify-between font-semibold">
+                    <span className="text-stone-500">Safe Benchmark (5x Price):</span>
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400">{formatRupiah(safeBenchmark5x)}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-between font-semibold">
-                <span className="text-stone-500">Safe Benchmark (5x Price):</span>
-                <span className="font-bold text-emerald-700 dark:text-emerald-400">{formatRupiah(safeBenchmark5x)}</span>
-              </div>
-            </div>
-          </div>
 
-          {/* Progress bar towards 5x benchmark */}
-          <div className="space-y-1.5 pt-1">
-            <div className="flex items-center justify-between text-xs font-bold text-stone-500">
-              <span>Safe Balance Progress: {progress5xPercent}%</span>
-              <span>{isSafeToBuy ? '5x Target Reached!' : `${formatRupiah(shortfall5x)} remaining`}</span>
+              {/* Progress bar towards 5x benchmark */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-xs font-bold text-stone-500">
+                  <span>Safe Balance Progress: {progress5xPercent}%</span>
+                  <span>{isSafeToBuy ? '5x Target Reached!' : `${formatRupiah(shortfall5x)} remaining`}</span>
+                </div>
+                <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-3 overflow-hidden">
+                  <div
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      isSafeToBuy ? 'bg-emerald-500' : 'bg-amber-500'
+                    }`}
+                    style={{ width: `${progress5xPercent}%` }}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="py-6 flex flex-col items-center justify-center text-center gap-2 flex-1">
+              <p className="text-sm font-semibold text-stone-600 dark:text-stone-400">
+                Belum ada target impian aktif.
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/wishlist')}
+                className="lisso-btn-black text-xs mt-1"
+              >
+                + Tambah Target Impian
+              </button>
             </div>
-            <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-3 overflow-hidden">
-              <div
-                className={`h-3 rounded-full transition-all duration-500 ${
-                  isSafeToBuy ? 'bg-emerald-500' : 'bg-amber-500'
-                }`}
-                style={{ width: `${progress5xPercent}%` }}
-              />
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Card 2: Daily Allowance & Budget Targets */}

@@ -12,6 +12,7 @@ import { useCategories } from '@/features/finance/hooks/use-categories'
 import { useWallets } from '@/features/finance/hooks/use-wallets'
 import { useCreateTransaction, useUpdateTransaction } from '@/features/finance/hooks/use-transactions'
 import type { Transaction } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 
 const transactionSchema = z.object({
   type: z.enum(['expense', 'income', 'transfer']),
@@ -94,7 +95,13 @@ export function TransactionForm({ open, onClose, transaction }: TransactionFormP
   const onSubmit = async (values: TransactionFormData) => {
     try {
       if (transaction) {
-        if (!window.confirm('Simpan perubahan transaksi ini?')) return
+        const ok = await confirmDialog({
+          title: 'Simpan Transaksi',
+          description: 'Simpan perubahan pada transaksi ini?',
+          confirmText: 'Simpan',
+          variant: 'default',
+        })
+        if (!ok) return
         await updateTx.mutateAsync({
           id: transaction.id,
           data: {

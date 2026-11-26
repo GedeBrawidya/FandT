@@ -16,6 +16,7 @@ import {
 import { useCalendar, type UnifiedCalendarItem } from '@/features/calendar/hooks/use-calendar'
 import { EventFormModal } from '@/features/calendar/components/event-form-modal'
 import { formatRupiah } from '@/lib/format'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import {
   ChevronLeft,
   ChevronRight,
@@ -83,7 +84,13 @@ export function CalendarPage() {
 
   const handleDeleteItem = async (it: UnifiedCalendarItem) => {
     if (it.type === 'event' && it.rawItem?.id) {
-      if (!window.confirm(`Hapus agenda "${it.title}"?`)) return
+      const ok = await confirmDialog({
+        title: 'Hapus Agenda',
+        description: `Hapus agenda "${it.title}"?`,
+        confirmText: 'Hapus Agenda',
+        variant: 'destructive',
+      })
+      if (!ok) return
       await deleteEvent.mutateAsync(it.rawItem.id)
       setSelectedItemForDetail(null)
     }

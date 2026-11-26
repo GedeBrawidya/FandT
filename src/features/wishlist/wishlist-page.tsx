@@ -3,6 +3,7 @@ import { useWishlist } from '@/features/wishlist/hooks/use-wishlist'
 import { WishlistFormDialog } from '@/features/wishlist/components/wishlist-form-dialog'
 import { WishlistDepositDialog } from '@/features/wishlist/components/wishlist-deposit-dialog'
 import { useUpdateSavingsTarget, useBudgetPeriod } from '@/features/finance/hooks/use-allowance'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { formatRupiah } from '@/lib/format'
 import type { WishlistItem } from '@/types/database'
 import {
@@ -91,7 +92,14 @@ export function WishlistPage() {
 
   // Set wishlist target as period savings target
   const handleDeleteItem = async (item: WishlistItem) => {
-    if (window.confirm(`Hapus impian "${item.name}"?`)) {
+    const ok = await confirmDialog({
+      title: 'Hapus Target Impian',
+      description: `Apakah Anda yakin ingin menghapus "${item.name}"?`,
+      confirmText: 'Hapus Impian',
+      cancelText: 'Batal',
+      variant: 'destructive',
+    })
+    if (ok) {
       await deleteItem.mutateAsync(item.id)
     }
   }

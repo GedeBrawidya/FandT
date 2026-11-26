@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useCreateWallet, useUpdateWallet } from '@/features/finance/hooks/use-wallets'
 import type { Wallet } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 
 const walletSchema = z.object({
   name: z.string().min(1, 'Wallet name is required').max(50, 'Name is too long'),
@@ -66,7 +67,13 @@ export function WalletForm({ open, onClose, wallet }: WalletFormProps) {
   const onSubmit = async (values: WalletFormData) => {
     try {
       if (wallet) {
-        if (!window.confirm(`Simpan perubahan pada dompet "${values.name}"?`)) return
+        const ok = await confirmDialog({
+          title: 'Simpan Dompet',
+          description: `Simpan perubahan pada dompet "${values.name}"?`,
+          confirmText: 'Simpan',
+          variant: 'default',
+        })
+        if (!ok) return
         await updateWalletMutation.mutateAsync({
           id: wallet.id,
           data: {

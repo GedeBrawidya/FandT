@@ -3,6 +3,7 @@ import { useAuth } from '@/app/auth'
 import { useTheme } from '@/lib/theme'
 import { useTransactions } from '@/features/finance/hooks/use-transactions'
 import { formatTransactionsToCSV, downloadCSV } from '@/features/finance/api/export'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import {
   User,
   Sun,
@@ -38,8 +39,14 @@ export function SettingsPage() {
     downloadCSV(`fandt-backup-transaksi-${new Date().toISOString().slice(0, 10)}.csv`, csv)
   }
 
-  const handleResetCache = () => {
-    if (confirm('Clear local session cache and sign out?')) {
+  const handleResetCache = async () => {
+    const ok = await confirmDialog({
+      title: 'Reset Cache & Sign Out',
+      description: 'Bersihkan cache sesi lokal dan keluar dari akun?',
+      confirmText: 'Reset & Keluar',
+      variant: 'destructive',
+    })
+    if (ok) {
       localStorage.clear()
       window.location.href = '/login'
     }

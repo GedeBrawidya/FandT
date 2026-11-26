@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useWishlist } from '@/features/wishlist/hooks/use-wishlist'
 import type { WishlistItem } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { X } from 'lucide-react'
 
 interface WishlistFormDialogProps {
@@ -21,7 +22,14 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
 
   const handleDelete = async () => {
     if (!initialItem) return
-    if (window.confirm(`Hapus impian "${initialItem.name}"?`)) {
+    const ok = await confirmDialog({
+      title: 'Hapus Target Impian',
+      description: `Hapus target impian "${initialItem.name}"?`,
+      confirmText: 'Hapus Impian',
+      cancelText: 'Batal',
+      variant: 'destructive',
+    })
+    if (ok) {
       await deleteItem.mutateAsync(initialItem.id)
       onClose()
     }
@@ -53,7 +61,13 @@ export function WishlistFormDialog({ open, onClose, initialItem }: WishlistFormD
     if (!name.trim() || isNaN(priceNum) || priceNum <= 0) return
 
     if (initialItem) {
-      if (!window.confirm(`Simpan perubahan target impian "${name.trim()}"?`)) return
+      const ok = await confirmDialog({
+        title: 'Simpan Target Impian',
+        description: `Simpan perubahan pada "${name.trim()}"?`,
+        confirmText: 'Simpan',
+        variant: 'default',
+      })
+      if (!ok) return
       await updateItem.mutateAsync({
         id: initialItem.id,
         data: {

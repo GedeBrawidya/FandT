@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { NoteDoc } from '@/lib/mock-storage'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { X, Trash2, Image, Sparkles } from 'lucide-react'
 
 interface NoteModalProps {
@@ -52,7 +53,15 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
 
   const handleSave = async () => {
     if (!title.trim()) return
-    if (note && !window.confirm(`Simpan perubahan catatan "${title.trim()}"?`)) return
+    if (note) {
+      const ok = await confirmDialog({
+        title: 'Simpan Catatan',
+        description: `Simpan pembaruan catatan "${title.trim()}"?`,
+        confirmText: 'Simpan',
+        variant: 'default',
+      })
+      if (!ok) return
+    }
     setSaving(true)
     try {
       await onSave({
@@ -71,7 +80,14 @@ export function NoteModal({ open, onClose, note, onSave, onDelete }: NoteModalPr
 
   const handleDelete = async () => {
     if (!note?.id || !onDelete) return
-    if (window.confirm(`Hapus catatan "${title || 'ini'}"?`)) {
+    const ok = await confirmDialog({
+      title: 'Hapus Catatan',
+      description: `Hapus catatan "${title || 'ini'}"? Catatan yang dihapus tidak dapat dipulihkan.`,
+      confirmText: 'Hapus Catatan',
+      cancelText: 'Batal',
+      variant: 'destructive',
+    })
+    if (ok) {
       await onDelete(note.id)
       onClose()
     }

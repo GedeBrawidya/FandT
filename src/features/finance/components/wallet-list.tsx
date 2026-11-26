@@ -7,6 +7,7 @@ import { useWallets, useWalletBalances, useArchiveWallet } from '@/features/fina
 import { WalletForm } from '@/features/finance/components/wallet-form'
 import { formatRupiah } from '@/lib/format'
 import type { Wallet } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { Plus, Edit2, Archive, Wallet as WalletIcon, CreditCard, Smartphone } from 'lucide-react'
 
 export function WalletList() {
@@ -29,7 +30,14 @@ export function WalletList() {
   }
 
   const handleArchive = async (id: string, name: string) => {
-    if (window.confirm(`Arsipkan dompet "${name}"? Dompet tidak akan muncul lagi di daftar aktif.`)) {
+    const ok = await confirmDialog({
+      title: 'Arsipkan Dompet',
+      description: `Arsipkan dompet "${name}"? Dompet tidak akan muncul lagi di daftar aktif.`,
+      confirmText: 'Arsipkan',
+      cancelText: 'Batal',
+      variant: 'destructive',
+    })
+    if (ok) {
       await archiveMutation.mutateAsync(id)
     }
   }

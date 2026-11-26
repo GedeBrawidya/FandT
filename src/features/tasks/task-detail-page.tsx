@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { useTask, useToggleTaskStatus, useDeleteTask, useCreateSubtask, useToggleSubtask } from '@/features/tasks/hooks/use-tasks'
 import { TaskFormDialog } from '@/features/tasks/components/task-form-dialog'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import {
   ArrowLeft,
   CheckCircle2,
@@ -176,8 +177,15 @@ export function TaskDetailPage() {
               <Pencil size={15} />
             </button>
             <button
-              onClick={() => {
-                if (window.confirm(`Hapus tugas "${displayTask.title}"?`)) {
+              onClick={async () => {
+                const ok = await confirmDialog({
+                  title: 'Hapus Tugas',
+                  description: `Hapus tugas "${displayTask.title}"?`,
+                  confirmText: 'Hapus',
+                  cancelText: 'Batal',
+                  variant: 'destructive',
+                })
+                if (ok) {
                   deleteTask.mutate(displayTask.id)
                   navigate('/tasks')
                 }

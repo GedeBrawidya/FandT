@@ -13,6 +13,7 @@ import {
 } from '@/features/finance/hooks/use-categories'
 import type { Category } from '@/types/database'
 import { Plus, Edit2, Archive, Tag } from 'lucide-react'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 
 const KIND_LABELS = {
   expense: 'Expense',
@@ -59,7 +60,13 @@ export function CategoryList() {
     if (!name.trim()) return
 
     if (editingCategory) {
-      if (!window.confirm(`Simpan perubahan kategori "${name.trim()}"?`)) return
+      const ok = await confirmDialog({
+        title: 'Simpan Kategori',
+        description: `Simpan perubahan kategori "${name.trim()}"?`,
+        confirmText: 'Simpan',
+        variant: 'default',
+      })
+      if (!ok) return
       await updateMutation.mutateAsync({
         id: editingCategory.id,
         data: { name: name.trim(), color, icon },
@@ -78,7 +85,13 @@ export function CategoryList() {
   }
 
   const handleArchive = async (c: Category) => {
-    if (window.confirm(`Arsipkan kategori "${c.name}"?`)) {
+    const ok = await confirmDialog({
+      title: 'Arsipkan Kategori',
+      description: `Arsipkan kategori "${c.name}"? Kategori tidak akan muncul di pilihan utama.`,
+      confirmText: 'Arsipkan',
+      variant: 'destructive',
+    })
+    if (ok) {
       await archiveMutation.mutateAsync(c.id)
     }
   }

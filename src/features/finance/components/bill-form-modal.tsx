@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useCategories } from '@/features/finance/hooks/use-categories'
 import { useCreateBill, useUpdateBill } from '@/features/finance/hooks/use-bills'
 import type { Bill } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { X } from 'lucide-react'
 
 interface BillFormModalProps {
@@ -46,7 +47,13 @@ export function BillFormModal({ open, onClose, initialData }: BillFormModalProps
     if (!name || isNaN(numAmount) || numAmount <= 0) return
 
     if (initialData) {
-      if (!window.confirm(`Simpan perubahan tagihan "${name.trim()}"?`)) return
+      const ok = await confirmDialog({
+        title: 'Simpan Tagihan',
+        description: `Simpan pembaruan tagihan "${name.trim()}"?`,
+        confirmText: 'Simpan',
+        variant: 'default',
+      })
+      if (!ok) return
       await updateBill.mutateAsync({
         id: initialData.id,
         data: {

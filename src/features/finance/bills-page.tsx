@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useBills, useBillPayments, useDeleteBill } from '@/features/finance/hooks/use-bills'
 import { BillFormModal } from '@/features/finance/components/bill-form-modal'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { PayBillModal } from '@/features/finance/components/pay-bill-modal'
 import { Card } from '@/components/ui/card'
 import { formatRupiah } from '@/lib/format'
@@ -206,7 +207,14 @@ export function BillsPage() {
 
                     <button
                       onClick={async () => {
-                        if (window.confirm(`Hapus tagihan "${bill.name}"?`)) {
+                        const ok = await confirmDialog({
+                          title: 'Hapus Tagihan',
+                          description: `Hapus tagihan "${bill.name}"?`,
+                          confirmText: 'Hapus Tagihan',
+                          cancelText: 'Batal',
+                          variant: 'destructive',
+                        })
+                        if (ok) {
                           await deleteBill.mutateAsync(bill.id)
                         }
                       }}

@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { useCategories } from '@/features/finance/hooks/use-categories'
 import { useCreateTask, useUpdateTask } from '@/features/tasks/hooks/use-tasks'
 import type { Task } from '@/types/database'
+import { confirmDialog } from '@/components/ui/confirm-dialog'
 import { X, Plus, Trash2 } from 'lucide-react'
 
 interface TaskFormDialogProps {
@@ -81,7 +82,13 @@ export function TaskFormDialog({ open, onClose, initialTask, initialStatus }: Ta
     }
 
     if (initialTask) {
-      if (!window.confirm(`Simpan perubahan tugas "${title.trim()}"?`)) return
+      const ok = await confirmDialog({
+        title: 'Simpan Perubahan Tugas',
+        description: `Simpan pembaruan tugas "${title.trim()}"?`,
+        confirmText: 'Simpan',
+        variant: 'default',
+      })
+      if (!ok) return
       await updateTask.mutateAsync({
         id: initialTask.id,
         data: {

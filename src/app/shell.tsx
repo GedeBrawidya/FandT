@@ -7,6 +7,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { FandtLogo } from '@/components/fandt-logo'
 import { QuickAddSheet } from '@/features/finance/components/quick-add-sheet'
 import { Toaster } from '@/components/ui/toast'
+import { GlobalConfirmDialog } from '@/components/ui/confirm-dialog'
 import {
   Home,
   CheckSquare,
@@ -88,7 +89,7 @@ export function AppShell() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors">
+    <div className={`min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors ${location.pathname === '/' ? 'lg:h-screen lg:overflow-hidden' : ''}`}>
       {/* ======================================================== */}
       {/* TOP HEADER (FandT Floating Island on Scroll)             */}
       {/* ======================================================== */}
@@ -203,7 +204,7 @@ export function AppShell() {
       {/* ======================================================== */}
       {/* MAIN CONTENT WRAPPER                                     */}
       {/* ======================================================== */}
-      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-28 md:pb-8">
+      <main className={`max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-1.5 sm:pt-2 pb-28 lg:pb-2 lg:overflow-hidden' : 'pt-2 sm:pt-4 pb-28 md:pb-8'}`}>
         <Outlet />
       </main>
 
@@ -254,6 +255,9 @@ export function AppShell() {
 
       {/* Global Toast System */}
       <Toaster />
+
+      {/* Global Custom Confirmation Dialog */}
+      <GlobalConfirmDialog />
     </div>
   )
 }
