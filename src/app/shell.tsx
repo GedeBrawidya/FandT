@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/app/auth'
 import { useTheme } from '@/lib/theme'
@@ -58,6 +58,16 @@ export function AppShell() {
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [quickAddOpen, setQuickAddOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 8)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (loading) return <FullScreenLoader />
 
@@ -78,12 +88,24 @@ export function AppShell() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors ${location.pathname === '/' ? 'lg:h-screen lg:overflow-hidden' : ''}`}>
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-[#090909] text-stone-900 dark:text-stone-100 transition-colors">
       {/* ======================================================== */}
-      {/* TOP HEADER (FandT Clean UI)                              */}
+      {/* TOP HEADER (FandT Floating Island on Scroll)             */}
       {/* ======================================================== */}
-      <header className="sticky top-0 z-40 w-full bg-[#FAF7F2]/95 dark:bg-[#090909]/95 backdrop-blur-md border-b-0">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 py-2.5 flex items-center justify-between">
+      <header
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+          isScrolled
+            ? 'py-2 sm:py-2.5 px-3 sm:px-6'
+            : 'py-2.5 sm:py-3 px-4 sm:px-8'
+        }`}
+      >
+        <div
+          className={`max-w-[1440px] mx-auto flex items-center justify-between transition-all duration-300 ${
+            isScrolled
+              ? 'px-4 sm:px-6 py-2 rounded-2xl sm:rounded-full bg-white/90 dark:bg-[#141414]/90 backdrop-blur-2xl border border-stone-200/90 dark:border-white/[0.12] shadow-[0_10px_35px_-5px_rgba(30,22,12,0.1)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.6)]'
+              : 'px-1 sm:px-2 py-0 bg-transparent'
+          }`}
+        >
           {/* Brand: Clean F&T Logo + Name */}
           <NavLink to="/" className="flex items-center gap-2.5 group">
             <FandtLogo size="sm" />
@@ -181,7 +203,7 @@ export function AppShell() {
       {/* ======================================================== */}
       {/* MAIN CONTENT WRAPPER                                     */}
       {/* ======================================================== */}
-      <main className={`max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 ${location.pathname === '/' ? 'pt-1.5 sm:pt-2 pb-28 lg:pb-2 lg:overflow-hidden' : 'pt-3 sm:pt-5 pb-28 md:pb-8'}`}>
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-28 md:pb-8">
         <Outlet />
       </main>
 
@@ -203,7 +225,7 @@ export function AppShell() {
       {/* ======================================================== */}
       {/* FLOATING BOTTOM PILL NAVBAR (Mobile only, based on ref)   */}
       {/* ======================================================== */}
-      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 md:hidden flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/95 dark:bg-[#141414]/95 backdrop-blur-xl border border-stone-200/80 dark:border-white/[0.1] shadow-2xl max-w-[calc(100vw-24px)]">
+      <nav className="fixed bottom-3 left-3 right-3 sm:left-6 sm:right-6 max-w-lg mx-auto z-40 md:hidden flex items-center justify-between gap-1 p-2 rounded-2xl bg-white/95 dark:bg-[#141414]/95 backdrop-blur-2xl border border-stone-200/90 dark:border-white/[0.12] shadow-[0_12px_36px_-6px_rgba(0,0,0,0.18)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)]">
         {MOBILE_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => {
           const isActive = end
             ? location.pathname === to
@@ -213,15 +235,15 @@ export function AppShell() {
               key={to}
               to={to}
               end={end}
-              className={`flex items-center gap-1.5 transition-all duration-200 ${
+              className={`flex items-center justify-center gap-1.5 transition-all duration-200 min-h-[44px] ${
                 isActive
-                  ? 'px-3.5 py-2 rounded-full bg-stone-100 dark:bg-[#252525] text-stone-900 dark:text-stone-100 font-bold text-xs shadow-xs'
-                  : 'p-2.5 rounded-full text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
+                  ? 'flex-1 py-2 px-3 rounded-xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 font-extrabold text-xs shadow-xs'
+                  : 'p-2.5 rounded-xl text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
               }`}
               title={label}
             >
-              <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-              {isActive && <span className="text-[11px] font-bold tracking-tight">{label}</span>}
+              <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+              {isActive && <span className="text-xs font-bold tracking-tight whitespace-nowrap">{label}</span>}
             </NavLink>
           )
         })}
