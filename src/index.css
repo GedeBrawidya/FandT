@@ -84,62 +84,63 @@
     @apply min-h-11 min-w-11;
   }
 
-  .dashboard-screen { @apply relative lg:h-[calc(100dvh-82px)] lg:overflow-hidden flex flex-col gap-2; }
+  .dashboard-screen { @apply relative flex flex-col gap-1.5 xl:gap-2; }
   .dashboard-screen::after { content: ''; @apply pointer-events-none absolute -bottom-32 left-[18%] h-56 w-[72%] rounded-[50%] bg-[#d5bcaa]/35 blur-[1px] dark:bg-stone-600/10; transform: rotate(-8deg); }
   .dashboard-intro { @apply relative z-10 flex items-center justify-between gap-4 shrink-0 px-1; }
-  .dashboard-intro h1 { @apply text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100; }
-  .eyebrow { @apply text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500; }
+  .dashboard-intro h1 { @apply text-xl xl:text-[22px] font-extrabold tracking-tight text-stone-900 dark:text-stone-100; }
+  .eyebrow { @apply text-[9.5px] font-bold uppercase tracking-[0.14em] text-stone-500; }
   .dashboard-actions { @apply flex items-center gap-2; }
-  .dashboard-period { @apply hidden sm:block rounded-full border border-stone-200 bg-white px-3 py-2 text-[11px] font-semibold text-stone-600 hover:border-stone-400 dark:border-white/[0.08] dark:bg-[#141414] dark:text-stone-300; }
-  .dashboard-add { @apply px-3.5 py-2 text-[11px]; }
-  .dashboard-grid { @apply relative z-10 grid flex-1 min-h-0 grid-cols-1 gap-2 xl:grid-cols-[.82fr_1.16fr_.82fr]; }
-  .dashboard-rail, .dashboard-middle-rail { @apply grid min-h-0 gap-3; }
+  .dashboard-period { @apply hidden sm:block rounded-full border border-stone-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-stone-600 hover:border-stone-400 dark:border-white/[0.08] dark:bg-[#141414] dark:text-stone-300; }
+  .dashboard-add { @apply px-3 py-1.5 text-[11px]; }
+  .dashboard-grid { @apply relative z-10 grid flex-1 min-h-0 grid-cols-1 gap-2 xl:gap-2.5 xl:grid-cols-[.82fr_1.16fr_.82fr]; }
+  .dashboard-rail, .dashboard-middle-rail { @apply grid min-h-0 gap-2 xl:gap-2.5; }
   .dashboard-left-rail { @apply grid-rows-3; }
   .dashboard-middle-rail { @apply grid-rows-[auto_1fr_1fr]; }
   .dashboard-right-rail { @apply grid-rows-2; }
-  .dashboard-card { @apply min-h-0 overflow-hidden rounded-[24px] border-0 bg-white/95 p-4 shadow-[0_14px_35px_rgba(93,72,52,0.08)] dark:border-white/[0.08] dark:bg-[#141414] transition-colors duration-200; }
+  .dashboard-card { @apply min-h-0 overflow-hidden rounded-[20px] xl:rounded-[22px] border-0 bg-white/95 px-3.5 py-3 xl:px-4 xl:py-3.5 shadow-[0_12px_28px_rgba(93,72,52,0.06)] dark:border-white/[0.08] dark:bg-[#141414] transition-colors duration-200; }
   .dashboard-card:hover { @apply bg-[#F6F0E7] dark:bg-[#1c1c1c]; }
-  .dashboard-card h2 { @apply mt-3 truncate text-sm font-extrabold text-stone-900 dark:text-stone-100; }
+  .dashboard-card h2 { @apply mt-1.5 xl:mt-2 truncate text-xs xl:text-sm font-extrabold text-stone-900 dark:text-stone-100; }
   .card-kicker { @apply flex items-center justify-between gap-2 text-[10px] font-bold uppercase tracking-[0.11em] text-stone-500; }
-  .card-kicker > button { @apply normal-case tracking-normal text-[11px] font-bold text-stone-700 rounded-lg px-2 py-1 -mr-2 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:text-stone-200 dark:hover:bg-stone-800; }
-  .dashboard-amount { @apply mt-3 text-2xl font-extrabold tracking-tight text-stone-900 tabular-nums dark:text-stone-100; }
-  .card-copy { @apply mt-1 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400; }
+  .card-kicker > button { @apply normal-case tracking-normal text-[10.5px] font-bold text-stone-700 rounded-lg px-2 py-0.5 -mr-1 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:text-stone-200 dark:hover:bg-stone-800; }
+  .dashboard-amount { @apply mt-1.5 xl:mt-2 text-xl xl:text-[22px] font-extrabold tracking-tight text-stone-900 tabular-nums dark:text-stone-100; }
+  .card-copy { @apply mt-0.5 text-[10.5px] leading-snug text-stone-500 dark:text-stone-400; }
   .status-good, .status-danger { @apply rounded-full px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal; }
   .status-good { @apply bg-[#E7F0E7] text-[#3F6244] dark:bg-[#263C2B] dark:text-[#B5D8B8]; }
   .status-danger { @apply bg-[#F7E4DD] text-[#9D4530] dark:bg-[#4A2720] dark:text-[#F3B5A4]; }
-  .dashboard-meter { @apply mt-4 h-2 overflow-hidden rounded-full bg-[#EEE8DD] dark:bg-stone-800; }
+  .dashboard-meter { @apply mt-2.5 h-1.5 overflow-hidden rounded-full bg-[#EEE8DD] dark:bg-stone-800; }
   .dashboard-meter i { @apply block h-full rounded-full bg-[#f0b937] transition-all duration-500; }
-  .dashboard-link { @apply mt-3 inline-flex items-center gap-1 rounded-lg px-2 py-1 -ml-2 text-[11px] font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
-  .wallet-list-mini { @apply mt-3 grid gap-1 text-[10px] text-stone-500 dark:text-stone-400; }
+  .dashboard-link { @apply mt-1.5 xl:mt-2 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 -ml-2 text-[11px] font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
+  .wallet-list-mini { @apply mt-1.5 xl:mt-2 grid gap-0.5 text-[10px] text-stone-500 dark:text-stone-400; }
   .wallet-list-mini span { @apply flex justify-between gap-2 truncate; }
   .wallet-list-mini b { @apply font-semibold text-stone-700 dark:text-stone-200; }
-  .progress-copy { @apply mt-2 text-[11px] font-semibold text-[#3F6244] dark:text-[#B5D8B8]; }
-  .dashboard-list { @apply mt-3 grid gap-1.5; }
-  .task-row { @apply grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-2 dark:border-white/[0.06] dark:bg-[#181818] transition-colors; }
+  .progress-copy { @apply mt-1 text-[10px] xl:text-[10.5px] font-semibold text-[#3F6244] dark:text-[#B5D8B8]; }
+  .dashboard-list { @apply mt-1.5 xl:mt-2 grid gap-1; }
+  .task-row { @apply grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-1.5 dark:border-white/[0.06] dark:bg-[#181818] transition-colors; }
   .task-row > button:first-child { @apply text-stone-400 hover:text-[#59715A]; }
   .task-title { @apply min-w-0 text-left; }
-  .task-title b, .bill-row b { @apply block truncate text-[11px] font-bold text-stone-800 dark:text-stone-100; }
-  .task-title small, .bill-row small { @apply block truncate text-[10px] text-stone-500 dark:text-stone-400; }
+  .task-title b, .bill-row b { @apply block truncate text-[10.5px] font-bold text-stone-800 dark:text-stone-100; }
+  .task-title small, .bill-row small { @apply block truncate text-[9.5px] text-stone-500 dark:text-stone-400; }
   .priority { @apply rounded-full px-1.5 py-0.5 text-[9px] font-bold; }
   .priority-high { @apply bg-[#F7E4DD] text-[#9D4530]; }
   .priority-med { @apply bg-[#F4E8C9] text-[#87651C]; }
   .priority-low { @apply bg-[#E7F0E7] text-[#3F6244]; }
-  .bill-row { @apply flex w-full items-center justify-between gap-3 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-2 text-left hover:bg-[#fff5dd] dark:border-white/[0.06] dark:bg-[#181818] dark:hover:bg-[#202020] transition-colors; }
+  .bill-row { @apply flex w-full items-center justify-between gap-3 rounded-xl border border-stone-100 bg-[#fffcf9] px-2.5 py-1.5 text-left hover:bg-[#fff5dd] dark:border-white/[0.06] dark:bg-[#181818] dark:hover:bg-[#202020] transition-colors; }
   .bill-row > span { @apply min-w-0; }
-  .bill-row strong { @apply shrink-0 text-[11px] font-extrabold text-stone-800 dark:text-stone-100; }
-  .note-preview { @apply mt-4 flex w-full gap-3 text-left; }
-  .note-preview > span { @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#E7F0E7] text-base; }
+  .bill-row strong { @apply shrink-0 text-[10.5px] font-extrabold text-stone-800 dark:text-stone-100; }
+  .note-preview { @apply mt-2 xl:mt-2.5 flex w-full gap-2.5 text-left; }
+  .note-preview > span { @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#E7F0E7] text-sm; }
   .note-preview h2 { @apply mt-0; }
-  .note-preview p { @apply mt-1 line-clamp-3 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400; }
-  .empty-mini { @apply mt-5 text-center text-[11px] text-stone-500; }
-  .empty-mini button { @apply mt-2 rounded-lg px-2 py-1 font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
+  .note-preview p { @apply mt-0.5 line-clamp-2 xl:line-clamp-3 text-[10.5px] leading-snug text-stone-500 dark:text-stone-400; }
+  .empty-mini { @apply mt-3 text-center text-[10.5px] text-stone-500; }
+  .empty-mini button { @apply mt-1.5 rounded-lg px-2 py-0.5 font-bold text-stone-800 transition-colors hover:bg-[#F3EEE6] dark:text-stone-100 dark:hover:bg-stone-800; }
   .dashboard-column-title { @apply flex items-center justify-between px-1 text-xs font-extrabold text-stone-800 dark:text-stone-100; }
-  .dashboard-column-title > button { @apply inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] font-bold text-stone-500 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:hover:bg-stone-800 dark:hover:text-stone-100; }
-  .dashboard-focus { @apply flex flex-col justify-center bg-[#ffda68] dark:bg-[#1c1c1c] text-stone-900 dark:text-stone-100 dark:border dark:border-white/[0.08]; }
-  .focus-icon { @apply mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 dark:bg-white/10 text-stone-900 dark:text-stone-100; }
-  .dashboard-focus h2 { @apply mt-0 whitespace-normal text-xl leading-tight; }
-  .dashboard-focus .card-copy { @apply text-stone-700 dark:text-stone-300; }
-  .dashboard-focus .dashboard-link { @apply mt-5; }
+  .dashboard-column-title > button { @apply inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-bold text-stone-500 transition-colors hover:bg-[#F3EEE6] hover:text-stone-900 dark:hover:bg-stone-800 dark:hover:text-stone-100; }
+  .dashboard-shortcuts { @apply flex flex-col justify-between; }
+  .shortcut-tile { @apply flex items-center gap-2 xl:gap-2.5 p-1.5 xl:p-2 rounded-xl bg-stone-50/90 dark:bg-[#181818] hover:bg-[#F3ECE1] dark:hover:bg-[#202020] border-0 transition-colors text-left cursor-pointer; }
+  .shortcut-icon { @apply flex h-7 w-7 xl:h-8 xl:w-8 shrink-0 items-center justify-center rounded-lg; }
+  .shortcut-text { @apply flex flex-col min-w-0; }
+  .shortcut-title { @apply truncate text-[11px] xl:text-xs font-bold text-stone-900 dark:text-stone-100; }
+  .shortcut-sub { @apply truncate text-[9.5px] xl:text-[10px] text-stone-500 dark:text-stone-400; }
 
   @media (max-width: 1279px) {
     .dashboard-screen { @apply h-auto overflow-visible; }
@@ -163,5 +164,5 @@
   .finance-screen .bg-slate-900\/90 { background-color: rgba(38,35,31,.96) !important; }
   .dashboard-link:hover, .card-kicker > button:hover, .dashboard-column-title > button:hover { background-color: #e9ddcf !important; color: #3b332b !important; }
   .dashboard-screen { min-height: 0; }
-  @media (min-width: 1280px) { .dashboard-screen { max-height: calc(100dvh - 82px); overflow: hidden; } }
+  @media (min-width: 1280px) { .dashboard-screen { height: calc(100dvh - 76px); max-height: calc(100dvh - 76px); overflow: hidden; } }
 }
